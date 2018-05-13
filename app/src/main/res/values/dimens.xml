@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_extra_large">24dp</dimen>
+
+    <dimen name="text_sz_extra_small">12sp</dimen>
+    <dimen name="text_sz_small">14sp</dimen>
+    <dimen name="text_sz_medium">16sp</dimen>
+    <dimen name="text_sz_large">18sp</dimen>
+    <dimen name="text_sz_extra_large">22sp</dimen>
+
+    <dimen name="padding_extra_small">4dp</dimen>
+    <dimen name="padding_small">6dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_large">15dp</dimen>
+    <dimen name="padding_extra_large">20dp</dimen>
+
+    <dimen name="card_margin">8dp</dimen>
+
+    <dimen name="progress_bar_dimens">42dp</dimen>
+
+    <dimen name="grid_layout_margin">6dp</dimen>
+
+    <dimen name="view_overlay_layout_height">64dp</dimen>
+    <dimen name="button_toggle_size">30dp</dimen>
+
+    <dimen name="recipe_grid_height">150dp</dimen>
+
+</resources>

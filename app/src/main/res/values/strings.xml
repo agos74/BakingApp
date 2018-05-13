@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Baking App</string>
+    <string name="recipe_image_content_description">Recipe image</string>
+    <string name="recipe_name">Nutella Pie</string>
+
+    <!-- Error messages-->
+    <string name="error_message">
+        An error has occurred. Please check your internet connection and try again
+    </string>
+    <string name="detail_error_message">Recipe data not available</string>
+
+    <string name="retry">Retry</string>
+
+</resources>
