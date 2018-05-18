@@ -1,6 +1,7 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -28,14 +29,32 @@ public class DetailActivity extends AppCompatActivity {
 
         if (recipe != null) {
             this.setTitle(recipe.getName());
+
+            // Only create new fragments when there is no previously saved state
+            if (savedInstanceState == null) {
+
+                // Create a new stepsListFragment
+                StepsListFragment stepsListFragment = new StepsListFragment();
+
+                // Set the list of steps for the fragment
+                stepsListFragment.setStepsList(recipe.getSteps());
+
+                // Add the fragment to its container using a FragmentManager and a Transaction
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .add(R.id.steps_list_container, stepsListFragment)
+                        .commit();
+            }
         }
 
-//        Log.d(TAG, "Recipe: " + recipe.toString());
     }
 
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
+
+
 
 }
