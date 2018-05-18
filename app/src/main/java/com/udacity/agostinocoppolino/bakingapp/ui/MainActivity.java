@@ -1,4 +1,4 @@
-package com.udacity.agostinocoppolino.bakingapp;
+package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.utils.NetworkUtils;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 

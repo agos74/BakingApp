@@ -28,5 +28,6 @@
     <dimen name="button_toggle_size">30dp</dimen>
 
     <dimen name="recipe_grid_height">150dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

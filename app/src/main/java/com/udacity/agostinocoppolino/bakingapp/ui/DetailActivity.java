@@ -1,11 +1,11 @@
-package com.udacity.agostinocoppolino.bakingapp;
+package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 
 public class DetailActivity extends AppCompatActivity {

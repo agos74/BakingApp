@@ -12,6 +12,7 @@
     <string name="retry">Retry</string>
     <string name="ingredients">2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n
     </string>
+    <string name="ingredients_title">INGREDIENTS</string>
 
 
 </resources>

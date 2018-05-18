@@ -1,4 +1,4 @@
-package com.udacity.agostinocoppolino.bakingapp;
+package com.udacity.agostinocoppolino.bakingapp.ui;
 
 
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 import com.udacity.agostinocoppolino.bakingapp.utils.ImageUtils;
 
