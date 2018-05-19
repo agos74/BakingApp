@@ -92,6 +92,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         holder.mRecipeImageView.setContentDescription(recipeForThisPosition.getName());
         holder.mRecipeNameTextView.setText(recipeForThisPosition.getName());
+        holder.mRecipeServingsTextView.setText("Serving for " + recipeForThisPosition.getServings() + " people");
     }
 
     @Override
@@ -108,6 +109,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         @BindView(R.id.tv_recipe_name)
         TextView mRecipeNameTextView;
+
+        @BindView(R.id.tv_recipe_servings)
+        TextView mRecipeServingsTextView;
 
         public RecipeAdapterViewHolder(View itemView) {
             super(itemView);

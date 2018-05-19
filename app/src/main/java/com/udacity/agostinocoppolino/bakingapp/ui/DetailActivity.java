@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
@@ -30,6 +31,10 @@ public class DetailActivity extends AppCompatActivity {
         if (recipe != null) {
             this.setTitle(recipe.getName());
 
+            ListView listView = findViewById(R.id.list_ingredients);
+            IngredientAdapter ingredientAdapter = new IngredientAdapter(this, R.id.ingredient_list_item, recipe.getIngredients());
+            listView.setAdapter(ingredientAdapter);
+
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
 
@@ -54,7 +59,6 @@ public class DetailActivity extends AppCompatActivity {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
-
 
 
 }
