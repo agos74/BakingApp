@@ -10,6 +10,8 @@
     <string name="recipe_servings">Serving for 8 people</string>
     <string name="ingredients">2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n
     </string>
+    <string name="step_description">2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.
+    </string>
     <string name="ingredients_quantity">2</string>
     <string name="ingredients_measure">CUP</string>
     <string name="ingredients_name">Graham Cracker crumbs</string>
