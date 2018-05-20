@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,8 +32,10 @@ public class DetailActivity extends AppCompatActivity {
         if (recipe != null) {
             this.setTitle(recipe.getName());
 
+            // Create the adapter to convert the array to views
+            IngredientAdapter ingredientAdapter = new IngredientAdapter(this, recipe.getIngredients());
+            // Attach the adapter to a ListView
             ListView listView = findViewById(R.id.list_ingredients);
-            IngredientAdapter ingredientAdapter = new IngredientAdapter(this, R.id.ingredient_list_item, recipe.getIngredients());
             listView.setAdapter(ingredientAdapter);
 
             // Only create new fragments when there is no previously saved state

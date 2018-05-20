@@ -3,26 +3,33 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Ingredient;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
 
+    private static final String TAG = IngredientAdapter.class.getSimpleName();
 
-    public IngredientAdapter(@NonNull Context context, int resource, @NonNull List<Ingredient> objects) {
-        super(context, resource, objects);
+    private Context mContext;
+    private List<Ingredient> ingredientsList = new ArrayList<>();
+
+    public IngredientAdapter(@NonNull Context context, @NonNull List<Ingredient> list) {
+        super(context, 0, list);
+
+        mContext = context;
+        ingredientsList = list;
+
     }
 
 
@@ -30,17 +37,24 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View listItem = convertView;
 
-        convertView = inflater.inflate(R.layout.ingredient_item, null);
+        // Check if an existing view is being reused, otherwise inflate the view
+        if (listItem == null) {
+            listItem = LayoutInflater.from(getContext()).inflate(R.layout.ingredient_item, parent, false);
+        }
 
-        TextView mQuantityTextView = convertView.findViewById(R.id.tv_quantity);
-        TextView mMeasureTextView = convertView.findViewById(R.id.tv_measure);
-        TextView mIngredientTextView = convertView.findViewById(R.id.tv_ingredient);
-        Ingredient ingredient = getItem(position);
+        Ingredient ingredient = ingredientsList.get(position);
+
+        Log.d(TAG, "Ingredient: " + ingredient.toString());
+
+        TextView mQuantityTextView = listItem.findViewById(R.id.tv_quantity);
+        TextView mMeasureTextView = listItem.findViewById(R.id.tv_measure);
+        TextView mIngredientTextView = listItem.findViewById(R.id.tv_ingredient);
         mQuantityTextView.setText(ingredient.getQuantity());
         mMeasureTextView.setText(ingredient.getMeasure());
-        mIngredientTextView.setText(ingredient.getQuantity());
-        return convertView;
+        mIngredientTextView.setText(ingredient.getIngredient());
+
+        return listItem;
     }
 }
