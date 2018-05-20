@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Baking App</string>
+    <!-- Images content description -->
     <string name="recipe_image_content_description">Recipe image</string>
-    <string name="ingredients_title">Ingredients</string>
+    <string name="expand_more_image_content_description">Expand less ingredients list image</string>
+    <string name="expand_less_image_content_description">Expand less ingredients list image</string>
 
     <!-- Sample text -->
     <string name="recipe_name">Nutella Pie</string>
@@ -12,11 +14,17 @@
     <string name="ingredients_measure">CUP</string>
     <string name="ingredients_name">Graham Cracker crumbs</string>
 
-    <!-- Error messages-->
+    <!-- Error messages -->
     <string name="error_message">
         An error has occurred. Please check your internet connection and try again
     </string>
     <string name="detail_error_message">Recipe data not available</string>
     <string name="retry">Retry</string>
+
+    <!-- Sections Title -->
+    <string name="steps_title">Steps</string>
+    <string name="ingredients_title">Ingredients</string>
+    <string name="recipe_step_description">Recipe Step Description</string>
+    <string name="servings_text_with_placeholder">Serving for %1$s people</string>
 
 </resources>

@@ -17,11 +17,9 @@ import butterknife.ButterKnife;
 
 class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder> {
 
-    private static final String TAG = StepAdapter.class.getSimpleName();
-
     // Keeps track of the context and list of steps to display
-    private Context mContext;
-    private List<Step> mStepsList;
+    private final Context mContext;
+    private final List<Step> mStepsList;
 
     public StepAdapter(Context context, List<Step> stepsList) {
         mContext = context;
@@ -36,10 +34,9 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
      */
     @Override
     public StepAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutIdForListItem = R.layout.fragment_step_item;
+        int layoutIdForListItem = R.layout.step_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        boolean shouldAttachToParentImmediately = false;
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
         return new StepAdapterViewHolder(view);
     }
 

@@ -19,11 +19,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-// This fragment displays all of the steps in one large list
+// This fragment displays all of the steps in one list
 
 public class StepsListFragment extends Fragment {
 
     private static final String STEPS_LIST = "steps_list";
+
     //ButterKnife Binding
     @BindView(R.id.recyclerview_steps)
     RecyclerView mStepRecyclerView;

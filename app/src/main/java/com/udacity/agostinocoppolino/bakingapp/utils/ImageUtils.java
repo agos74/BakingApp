@@ -2,18 +2,17 @@ package com.udacity.agostinocoppolino.bakingapp.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 
-public class ImageUtils {
+import timber.log.Timber;
 
-    private static final String TAG = ImageUtils.class.getSimpleName();
+public class ImageUtils {
 
     public static Uri getImage(Recipe recipe, Context context) {
         Uri imageUri;
-        Log.d(TAG, "Recipe image: " + recipe.getImage());
-        if (recipe.getImage() != "") { //image available
+        Timber.d("Recipe image: " + recipe.getImage());
+        if (!recipe.getImage().equals("")) { //image available
             imageUri = Uri.parse(recipe.getImage()).buildUpon()
                     .build();
         } else { //image not available, get from drawable resources
@@ -37,7 +36,7 @@ public class ImageUtils {
             imageUri = Uri.parse(String.valueOf(recipeImageId)).buildUpon()
                     .build();
         }
-        Log.d(TAG, "imageUri: " + imageUri);
+        Timber.d("imageUri: " + imageUri);
         return imageUri;
 
     }

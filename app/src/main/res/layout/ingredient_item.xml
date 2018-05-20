@@ -4,11 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <View
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/bullet" />
+
     <TextView
         android:id="@+id/tv_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         android:text="@string/ingredients_quantity"
         android:textStyle="bold" />
 
@@ -16,7 +21,7 @@
         android:id="@+id/tv_measure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         android:text="@string/ingredients_measure" />
 
     <TextView

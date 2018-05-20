@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -28,6 +27,7 @@ import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Recipe>> {
 
@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        // Set up Timber
+        Timber.plant(new Timber.DebugTree());
 
         /*
          * GridLayoutManager to show the recipe images
@@ -189,13 +192,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
                 List<Recipe> recipesList = null;
                 if (response != null) {
-                    Log.d(TAG, "populate UI after response from service using OkHttp client");
+                    Timber.d("populate UI after response from service using OkHttp client");
                     Gson gsn = new GsonBuilder().create();
                     Type collectionType = new TypeToken<List<Recipe>>() {
                     }.getType();
                     recipesList = gsn.fromJson(response, collectionType);
                     for (Recipe entry : recipesList) {
-                        Log.d(TAG, entry.toString() + ",");
+                        Timber.d(entry.toString().concat(","));
                     }
                 }
 

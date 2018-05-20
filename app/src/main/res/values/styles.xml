@@ -9,6 +9,36 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Detail Activity labels -->
+    <style name="DetailLabelStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">@dimen/detail_label_width</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <!-- Detail Activity Text -->
+    <style name="DetailTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <!-- Detail Section Title -->
+    <style name="TitleLabelStyle" parent="DetailLabelStyle">
+        <item name="android:paddingTop">@dimen/padding_large</item>
+        <item name="android:paddingBottom">@dimen/padding_medium</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="sectionHeader" parent="TitleLabelStyle">
+        <item name="android:drawableBottom">@drawable/section_header</item>
+        <item name="android:drawablePadding">@dimen/padding_extra_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/padding_extra_small</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="Widget.CardContent" parent="android:Widget">
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
@@ -17,4 +47,5 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <dimen name="detail_label_width">110dp</dimen>
 </resources>

@@ -22,8 +22,6 @@ import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
 
-    private static final String TAG = RecipeAdapter.class.getSimpleName();
-
     private List<Recipe> mRecipesList;
 
     /**
@@ -60,8 +58,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.recipe_grid_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
         return new RecipeAdapterViewHolder(view);
     }
 
@@ -77,7 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         Recipe recipeForThisPosition = mRecipesList.get(position);
 
         Uri imgUri = ImageUtils.getImage(recipeForThisPosition, holder.mRecipeImageView.getContext());
-        if (recipeForThisPosition.getImage() == "") { //image not available, get drawable ResourceId
+        if (recipeForThisPosition.getImage().equals("")) { //image not available, get drawable ResourceId
             int imageResourceId = Integer.valueOf(imgUri.toString());
             Picasso.with(holder.mRecipeImageView.getContext()).load(imageResourceId)
                     .error(R.mipmap.ic_launcher)
@@ -92,7 +89,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         holder.mRecipeImageView.setContentDescription(recipeForThisPosition.getName());
         holder.mRecipeNameTextView.setText(recipeForThisPosition.getName());
-        holder.mRecipeServingsTextView.setText("Serving for " + recipeForThisPosition.getServings() + " people");
+        String servingText = holder.mRecipeImageView.getContext().getString(R.string.servings_text_with_placeholder, String.valueOf(recipeForThisPosition.getServings()));
+        holder.mRecipeServingsTextView.setText(servingText);
     }
 
     @Override
