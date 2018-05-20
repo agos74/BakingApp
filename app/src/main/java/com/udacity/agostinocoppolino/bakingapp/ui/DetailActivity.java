@@ -6,30 +6,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
-
-    @BindView(R.id.arrow_up_button)
-    ImageButton mArrowUpButton;
-
-    @BindView(R.id.arrow_down_button)
-    ImageButton mArrowDownButton;
-
-    @BindView(R.id.ingredients_list)
-    ListView mIngredientsListView;
-
-    private static final String INGREDIENTS_LIST_EXPANDED_TEXT_KEY = "ingredients_list_expanded";
-    private boolean mIngredientsListExpanded = false;
 
 
     @Override
@@ -55,30 +39,21 @@ public class DetailActivity extends AppCompatActivity {
         if (recipe != null) {
             this.setTitle(recipe.getName());
 
-            // Create the adapter to convert the array to views
-            IngredientAdapter ingredientAdapter = new IngredientAdapter(this, recipe.getIngredients());
-            // Attach the adapter to a ListView
-            ListView listView = findViewById(R.id.ingredients_list);
-            listView.setAdapter(ingredientAdapter);
-
-            mArrowUpButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    expandLessIngredientsList();
-                }
-            });
-
-            mArrowDownButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    expandMoreIngredientsList();
-                }
-            });
 
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
+
+                // Create a new ingredientsListFragment
+                IngredientsListFragment ingredientsListFragment = new IngredientsListFragment();
+                // Set the list of ingredients for the fragment
+                ingredientsListFragment.setIngredientsList(recipe.getIngredients());
+
+                // Add the fragment to its container using a FragmentManager and a Transaction
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .add(R.id.ingredients_list_container, ingredientsListFragment)
+                        .commit();
 
                 // Create a new stepsListFragment
                 StepsListFragment stepsListFragment = new StepsListFragment();
@@ -86,48 +61,12 @@ public class DetailActivity extends AppCompatActivity {
                 // Set the list of steps for the fragment
                 stepsListFragment.setStepsList(recipe.getSteps());
 
-                // Add the fragment to its container using a FragmentManager and a Transaction
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
                 fragmentManager.beginTransaction()
                         .add(R.id.steps_list_container, stepsListFragment)
                         .commit();
-            } else {
-                // Restore the ingredients list expanded state
-                if (savedInstanceState.containsKey(INGREDIENTS_LIST_EXPANDED_TEXT_KEY)) {
-                    mIngredientsListExpanded = savedInstanceState
-                            .getBoolean(INGREDIENTS_LIST_EXPANDED_TEXT_KEY);
-                    if (mIngredientsListExpanded) {
-                        expandMoreIngredientsList();
-                    } else {
-                        expandLessIngredientsList();
-                    }
-                }
-
             }
         }
 
-    }
-
-    private void expandMoreIngredientsList() {
-        mArrowDownButton.setVisibility(View.GONE);
-        mArrowUpButton.setVisibility(View.VISIBLE);
-        mIngredientsListView.setVisibility(View.VISIBLE);
-        mIngredientsListExpanded = true;
-    }
-
-    private void expandLessIngredientsList() {
-        mArrowUpButton.setVisibility(View.GONE);
-        mArrowDownButton.setVisibility(View.VISIBLE);
-        mIngredientsListView.setVisibility(View.GONE);
-        mIngredientsListExpanded = false;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //Put the ingredients list expanded state in the outState bundle
-        outState.putBoolean(INGREDIENTS_LIST_EXPANDED_TEXT_KEY, mIngredientsListExpanded);
     }
 
     private void closeOnError() {
