@@ -1,25 +1,24 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
-import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
+import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
-import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity {
-
+public class StepActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_step);
 
         ActionBar actionBar = this.getSupportActionBar();
         // Set the action bar back button to look like an up button
@@ -27,45 +26,38 @@ public class DetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ButterKnife.bind(this);
-
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }
 
-        Recipe recipe = intent != null ? (Recipe) intent.getParcelableExtra("Recipe") : null;
+        Step step = intent != null ? (Step) intent.getParcelableExtra("Step") : null;
 
-        if (recipe != null) {
-            this.setTitle(recipe.getName());
+        int totalSteps = intent.getExtras().getInt("TotalSteps");
 
+        String recipeName = intent.getExtras().getString("RecipeName");
+
+        if (step != null) {
+            this.setTitle(recipeName);
 
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
 
-                // Create a new ingredientsListFragment
-                IngredientsListFragment ingredientsListFragment = new IngredientsListFragment();
-                // Set the list of ingredients for the fragment
-                ingredientsListFragment.setIngredientsList(recipe.getIngredients());
+                // Create a new stepFragment
+                StepFragment stepFragment = new StepFragment();
+                // Set the Step for the fragment
+                stepFragment.setStep(step);
+
+                stepFragment.setTotalSteps(totalSteps);
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
                 fragmentManager.beginTransaction()
-                        .add(R.id.ingredients_list_container, ingredientsListFragment)
+                        .add(R.id.step_container, stepFragment)
                         .commit();
 
-                // Create a new stepsListFragment
-                StepsListFragment stepsListFragment = new StepsListFragment();
 
-                // Set the list of steps for the fragment
-                stepsListFragment.setStepsList(recipe.getSteps());
-
-                stepsListFragment.setRecipeName(recipe.getName());
-
-                fragmentManager.beginTransaction()
-                        .add(R.id.steps_list_container, stepsListFragment)
-                        .commit();
             }
         }
 
@@ -73,7 +65,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void closeOnError() {
         finish();
-        Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.step_error_message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

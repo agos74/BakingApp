@@ -2,7 +2,7 @@
     <string name="app_name">Baking App</string>
     <!-- Images content description -->
     <string name="recipe_image_content_description">Recipe image</string>
-    <string name="expand_more_image_content_description">Expand less ingredients list image</string>
+    <string name="expand_more_image_content_description">Expand more ingredients list image</string>
     <string name="expand_less_image_content_description">Expand less ingredients list image</string>
 
     <!-- Sample text -->
@@ -21,6 +21,7 @@
         An error has occurred. Please check your internet connection and try again
     </string>
     <string name="detail_error_message">Recipe data not available</string>
+    <string name="step_error_message">Step data not available</string>
     <string name="retry">Retry</string>
 
     <!-- Sections Title -->

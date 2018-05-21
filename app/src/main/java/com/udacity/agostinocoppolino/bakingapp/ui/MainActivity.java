@@ -31,7 +31,6 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Recipe>> {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RECIPES_LOADER_ID = 0;
 
     //ButterKnife Binding

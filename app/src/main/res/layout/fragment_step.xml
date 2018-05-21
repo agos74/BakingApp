@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_medium">
+    android:layout_margin="@dimen/margin_medium"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/playerView"
@@ -29,20 +31,35 @@
         tools:layout_editor_absoluteY="256dp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_short_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/recipe_step_description"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalHalf" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/step_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontalHalf" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_short_description" />
 
     <LinearLayout
+        android:id="@+id/layout_navigation"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -51,6 +68,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="291dp" />
+        tools:layout_editor_absoluteY="291dp">
+
+        <ImageButton
+            android:id="@+id/imageButton_prev"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+        <TextView
+            android:id="@+id/tv_navigation"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="1 of 8"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/imageButton_next"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

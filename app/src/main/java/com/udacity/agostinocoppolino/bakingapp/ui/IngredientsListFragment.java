@@ -45,9 +45,9 @@ public class IngredientsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 
-        final View rootView = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
 
-        ButterKnife.bind(this, rootView);
+        ButterKnife.bind(this, view);
 
         // Load the saved state (the list of steps) if there is one
         if (savedInstanceState != null) {
@@ -90,7 +90,7 @@ public class IngredientsListFragment extends Fragment {
             }
         });
 
-        return rootView;
+        return view;
     }
 
     public void setIngredientsList(List<Ingredient> ingredientsList) {

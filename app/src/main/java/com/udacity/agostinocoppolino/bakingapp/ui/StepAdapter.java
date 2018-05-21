@@ -1,11 +1,13 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
@@ -21,9 +23,24 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
     private final Context mContext;
     private final List<Step> mStepsList;
 
-    public StepAdapter(Context context, List<Step> stepsList) {
-        mContext = context;
-        mStepsList = stepsList;
+    /**
+     * An on-click handler that we've defined to make it easy for an Activity to interface with
+     * our RecyclerView
+     */
+    private final StepAdapterOnClickHandler mClickHandler;
+
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface StepAdapterOnClickHandler {
+        void onClick(Step step);
+    }
+
+
+    public StepAdapter(Context context, List<Step> stepsList, StepAdapterOnClickHandler mClickHandler) {
+        this.mContext = context;
+        this.mStepsList = stepsList;
+        this.mClickHandler = mClickHandler;
     }
 
     /**
@@ -47,10 +64,11 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
      * passed into us.
      */
     @Override
-    public void onBindViewHolder(StepAdapter.StepAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(StepAdapter.StepAdapterViewHolder holder, final int position) {
         Step stepForThisPosition = mStepsList.get(position);
 
-        holder.mStepShortDescriptionTextView.setText(stepForThisPosition.getShortDescription());
+        holder.mStepShortDescriptionTextView.setText((position + 1) + " - " + stepForThisPosition.getShortDescription());
+
     }
 
     @Override
@@ -58,14 +76,27 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         return (mStepsList == null) ? 0 : mStepsList.size();
     }
 
-    public class StepAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class StepAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_short_description)
         TextView mStepShortDescriptionTextView;
 
+        @BindView(R.id.cardview_step_item)
+        CardView mStepItemCardView;
+
         public StepAdapterViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            Step step = mStepsList.get(adapterPosition);
+            mClickHandler.onClick(step);
+
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
 
 // This fragment displays all of the steps in one list
 
-public class StepsListFragment extends Fragment {
+public class StepsListFragment extends Fragment implements StepAdapter.StepAdapterOnClickHandler {
 
     private static final String STEPS_LIST = "steps_list";
 
@@ -30,6 +32,8 @@ public class StepsListFragment extends Fragment {
     RecyclerView mStepRecyclerView;
 
     private List<Step> mStepsList;
+
+    private String mRecipeName;
 
     @Nullable
     @Override
@@ -48,7 +52,7 @@ public class StepsListFragment extends Fragment {
 
         // Create the adapter
         // This adapter takes in the context and an ArrayList of Step to display
-        StepAdapter mStepAdapter = new StepAdapter(getContext(), mStepsList);
+        StepAdapter mStepAdapter = new StepAdapter(getContext(), mStepsList, this);
 
         // Set the adapter on the RecyclerView
         mStepRecyclerView.setAdapter(mStepAdapter);
@@ -60,6 +64,10 @@ public class StepsListFragment extends Fragment {
         mStepsList = stepsList;
     }
 
+    public void setRecipeName(String recipeName) {
+        mRecipeName = recipeName;
+    }
+
     /**
      * Save the current state of this fragment
      */
@@ -68,5 +76,21 @@ public class StepsListFragment extends Fragment {
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
     }
 
-
+    /**
+     * This method is overridden by our MainActivity class in order to handle RecyclerView item
+     * clicks.
+     *
+     * @param step The step that was clicked
+     */
+    @Override
+    public void onClick(Step step) {
+        Context context = this.getContext();
+        // Launch the StepActivity using an explicit Intent
+        Class destinationClass = StepActivity.class;
+        Intent intentToStartStepActivity = new Intent(context, destinationClass);
+        intentToStartStepActivity.putExtra("Step", step);
+        intentToStartStepActivity.putExtra("TotalSteps", mStepsList.size());
+        intentToStartStepActivity.putExtra("RecipeName", mRecipeName);
+        startActivity(intentToStartStepActivity);
+    }
 }
