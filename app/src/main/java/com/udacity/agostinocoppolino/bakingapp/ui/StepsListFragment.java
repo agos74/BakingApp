@@ -80,17 +80,17 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
      * clicks.
      *
-     * @param step The step that was clicked
+     * @param stepIndex The index of the step that was clicked
      */
-    @Override
-    public void onClick(Step step) {
+
+    public void onClick(int stepIndex) {
         Context context = this.getContext();
         // Launch the StepActivity using an explicit Intent
         Class destinationClass = StepActivity.class;
         Intent intentToStartStepActivity = new Intent(context, destinationClass);
-        intentToStartStepActivity.putExtra("Step", step);
-        intentToStartStepActivity.putExtra("TotalSteps", mStepsList.size());
+        intentToStartStepActivity.putExtra("StepIndex", stepIndex);
         intentToStartStepActivity.putExtra("RecipeName", mRecipeName);
+        intentToStartStepActivity.putParcelableArrayListExtra("StepsList", (ArrayList<? extends Parcelable>) mStepsList);
         startActivity(intentToStartStepActivity);
     }
 }

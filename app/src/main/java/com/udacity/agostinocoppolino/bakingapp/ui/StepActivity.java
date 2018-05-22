@@ -12,6 +12,10 @@ import android.widget.Toast;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
+import java.util.List;
+
+import timber.log.Timber;
+
 
 public class StepActivity extends AppCompatActivity {
 
@@ -31,13 +35,15 @@ public class StepActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        Step step = intent != null ? (Step) intent.getParcelableExtra("Step") : null;
-
-        int totalSteps = intent.getExtras().getInt("TotalSteps");
+        int stepIndex = intent != null ? intent.getExtras().getInt("StepIndex") : -1;
 
         String recipeName = intent.getExtras().getString("RecipeName");
 
-        if (step != null) {
+        List<Step> stepsList = intent.getParcelableArrayListExtra("StepsList");
+
+        Timber.d(stepsList.toString());
+
+        if (stepIndex != -1) {
             this.setTitle(recipeName);
 
             // Only create new fragments when there is no previously saved state
@@ -45,10 +51,10 @@ public class StepActivity extends AppCompatActivity {
 
                 // Create a new stepFragment
                 StepFragment stepFragment = new StepFragment();
-                // Set the Step for the fragment
-                stepFragment.setStep(step);
 
-                stepFragment.setTotalSteps(totalSteps);
+                // Set StepIndex and StepsList for the fragment
+                stepFragment.setStepIndex(stepIndex);
+                stepFragment.setStepsList(stepsList);
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
