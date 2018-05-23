@@ -33,6 +33,17 @@
                     android:textSize="@dimen/text_sz_medium"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/tv_servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top_servings"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/margin_right_servings"
+                    android:text="@string/servings_text_with_placeholder"
+                    android:textSize="@dimen/text_sz_medium"
+                    android:textStyle="bold" />
+
                 <ImageButton
                     android:id="@+id/arrow_down_button"
                     android:layout_width="40dp"

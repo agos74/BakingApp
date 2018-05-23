@@ -17,7 +17,7 @@ import java.util.List;
 import timber.log.Timber;
 
 
-public class StepActivity extends AppCompatActivity {
+public class StepActivity extends AppCompatActivity implements NavigationFragment.OnStepSelectedListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +53,8 @@ public class StepActivity extends AppCompatActivity {
                 StepFragment stepFragment = new StepFragment();
 
                 // Set StepIndex and StepsList for the fragment
-                stepFragment.setStepIndex(stepIndex);
                 stepFragment.setStepsList(stepsList);
+                stepFragment.setStepIndex(stepIndex);
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -63,6 +63,18 @@ public class StepActivity extends AppCompatActivity {
                         .add(R.id.step_container, stepFragment)
                         .commit();
 
+
+                // Create a new navigationFragment
+                NavigationFragment navigationFragment = new NavigationFragment();
+
+                // Set StepIndex and StepsList for the fragment
+                navigationFragment.setStepsList(stepsList);
+                navigationFragment.setStepIndex(stepIndex);
+
+                // Add the fragment to its container using a FragmentManager and a Transaction
+                fragmentManager.beginTransaction()
+                        .add(R.id.navigation_container, navigationFragment)
+                        .commit();
 
             }
         }
@@ -86,4 +98,21 @@ public class StepActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onStepSelected(int stepIndex, List<Step> stepsList) {
+        // The user selected a step in navigation fragment the NavigationFragment
+        // Do something here to display that step
+
+        // Create a new stepFragment
+        StepFragment stepFragment = new StepFragment();
+
+        // Set StepIndex and StepsList for the fragment
+        stepFragment.setStepsList(stepsList);
+        stepFragment.setStepIndex(stepIndex);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.step_container, stepFragment)
+                .commit();
+
+    }
 }

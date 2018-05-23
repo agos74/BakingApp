@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Ingredient;
@@ -21,11 +22,16 @@ import butterknife.ButterKnife;
 
 public class IngredientsListFragment extends Fragment {
 
-    private List<Ingredient> mIngredientsList;
     private static final String INGREDIENTS_LIST_TEXT_KEY = "ingredients_list";
-
     private static final String INGREDIENTS_LIST_EXPANDED_TEXT_KEY = "ingredients_list_expanded";
+
+    private List<Ingredient> mIngredientsList;
+    private int mServings;
+
     private boolean mIngredientsListExpanded = false;
+
+    @BindView(R.id.tv_servings)
+    TextView mServingsTextView;
 
     @BindView(R.id.arrow_up_button)
     ImageButton mArrowUpButton;
@@ -35,6 +41,7 @@ public class IngredientsListFragment extends Fragment {
 
     @BindView(R.id.ingredients_list_view)
     ListView mIngredientsListView;
+
 
     // Mandatory empty constructor
     public IngredientsListFragment() {
@@ -65,6 +72,10 @@ public class IngredientsListFragment extends Fragment {
             }
 
         }
+
+        // Set servings
+        String servingText = mServingsTextView.getContext().getString(R.string.servings_text_with_placeholder, String.valueOf(mServings));
+        mServingsTextView.setText(servingText);
 
         // Create the adapter
         // This adapter takes in the context and an ArrayList of Ingredients to display
@@ -123,4 +134,7 @@ public class IngredientsListFragment extends Fragment {
 
     }
 
+    public void setServings(int servings) {
+        mServings = servings;
+    }
 }

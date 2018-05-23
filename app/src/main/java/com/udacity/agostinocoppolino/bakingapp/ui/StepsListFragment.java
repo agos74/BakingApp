@@ -93,4 +93,5 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
         intentToStartStepActivity.putParcelableArrayListExtra("StepsList", (ArrayList<? extends Parcelable>) mStepsList);
         startActivity(intentToStartStepActivity);
     }
+
 }

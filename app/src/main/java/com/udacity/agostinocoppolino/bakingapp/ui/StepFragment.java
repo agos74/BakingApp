@@ -41,32 +41,19 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @BindView(R.id.tv_description)
     TextView mDescriptionTextView;
 
-    @BindView(R.id.imageButton_prev)
-    ImageButton mPrevImageButton;
-
-    @BindView(R.id.imageButton_next)
-    ImageButton mNextImageButton;
-
-    @BindView(R.id.tv_navigation)
-    TextView mNavigationTextView;
-
     private static final String STEPS_LIST = "steps_list";
     private static final String CURRENT_STEP = "current_step";
 
     private List<Step> mStepsList;
-
     private int mCurrentStep;
-    private int mMaxSteps;
 
     public void setStepsList(List<Step> stepsList) {
         this.mStepsList = stepsList;
-        this.mMaxSteps = stepsList.size() - 1;
     }
 
     public void setStepIndex(int stepIndex) {
         this.mCurrentStep = stepIndex;
     }
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment
@@ -77,11 +64,10 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Load the saved state (step) if there is one
+        // Load the saved state if there is one
         if (savedInstanceState != null) {
             mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
-            mMaxSteps = mStepsList.size() - 1;
         }
 
         // Inflate the Android-Me fragment layout
@@ -94,22 +80,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         return view;
     }
 
-    @OnClick(R.id.imageButton_prev)
-    public void prev(ImageButton button) {
-        if (mCurrentStep > 0) {
-            mCurrentStep--;
-            populateStep();
-        }
-    }
-
-    @OnClick(R.id.imageButton_next)
-    public void next(ImageButton button) {
-        if (mMaxSteps > mCurrentStep) {
-            mCurrentStep++;
-            populateStep();
-        }
-    }
-
     private void populateStep() {
 
         Step step = mStepsList.get(mCurrentStep);
@@ -117,7 +87,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         mShortDescriptionTextView.setText(step.getShortDescription());
         mDescriptionTextView.setText(step.getDescription());
 
-        mNavigationTextView.setText(String.valueOf(mCurrentStep).concat(" of ").concat(String.valueOf(mMaxSteps)));
     }
 
     /**

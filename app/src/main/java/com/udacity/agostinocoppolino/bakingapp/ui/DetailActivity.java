@@ -47,6 +47,7 @@ public class DetailActivity extends AppCompatActivity {
                 IngredientsListFragment ingredientsListFragment = new IngredientsListFragment();
                 // Set the list of ingredients for the fragment
                 ingredientsListFragment.setIngredientsList(recipe.getIngredients());
+                ingredientsListFragment.setServings(recipe.getServings());
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -58,9 +59,8 @@ public class DetailActivity extends AppCompatActivity {
                 // Create a new stepsListFragment
                 StepsListFragment stepsListFragment = new StepsListFragment();
 
-                // Set the list of steps for the fragment
+                // Set the list of steps and the recipe name for the fragment
                 stepsListFragment.setStepsList(recipe.getSteps());
-
                 stepsListFragment.setRecipeName(recipe.getName());
 
                 fragmentManager.beginTransaction()
