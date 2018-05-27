@@ -1,19 +1,15 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -36,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
@@ -65,10 +60,9 @@ public class StepFragment extends Fragment {
     private int mCurrentStep = -1;
 
     private SimpleExoPlayer mExoPlayer;
-    private long mStartPosition;
-    private int mCurrentWindow;
-    private boolean mPlayWhenReady;
-    private View mView;
+    private long mStartPosition = C.TIME_UNSET;
+    private int mCurrentWindow = C.INDEX_UNSET;
+    private boolean mPlayWhenReady = false;
 
     public void setStepsList(List<Step> stepsList) {
 
@@ -91,39 +85,33 @@ public class StepFragment extends Fragment {
         mPlayWhenReady = true;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    //    setRetainInstance(true);
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Inflate the StepFragment layout
-        mView = inflater.inflate(R.layout.fragment_step, container, false);
+        final View view = inflater.inflate(R.layout.fragment_step, container, false);
 
-        ButterKnife.bind(this, mView);
+        ButterKnife.bind(this, view);
 
+        Timber.d("OnCreateView START start position: ".concat(String.valueOf(mStartPosition)));
         if (savedInstanceState != null) {
             mStepsList = savedInstanceState.getParcelableArrayList(KEY_STEPS_LIST);
             mCurrentStep = savedInstanceState.getInt(KEY_CURRENT_STEP);
-            mStartPosition = savedInstanceState.getLong(KEY_POSITION, C.TIME_UNSET);
+            mStartPosition = savedInstanceState.getLong(KEY_POSITION);
             mCurrentWindow = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
             mPlayWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
         }
+        Timber.d("OnCreateView END start position: ".concat(String.valueOf(mStartPosition)));
 
-        Timber.d("OnCreateView start position: ".concat(String.valueOf(mStartPosition)));
+        populateStep();
 
         // Initialize the player.
 //        initializePlayer();
 
-        populateStep();
+//        populateStep();
 
-        return mView;
+        return view;
     }
 
     /**
@@ -148,19 +136,22 @@ public class StepFragment extends Fragment {
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this.getContext(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mStepsList.get(mCurrentStep).getVideoURL()));
 
-            mExoPlayer.prepare(mediaSource, true, false);
-            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            mExoPlayer.prepare(mediaSource);
             mExoPlayer.seekTo(mStartPosition);
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
 
         }
     }
 
     private void populateStep() {
 
+        Timber.d("PopulateStep: " + mStartPosition);
         Step step = mStepsList.get(mCurrentStep);
 
         mShortDescriptionTextView.setText(step.getShortDescription());
         mDescriptionTextView.setText(step.getDescription());
+
+        initializePlayer();
 
     }
 
@@ -202,8 +193,8 @@ public class StepFragment extends Fragment {
 
     @Override
     public void onPause() {
-        Timber.d("Exoplayer onPause.");
         super.onPause();
+        Timber.d("Exoplayer onPause.");
         if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
@@ -211,11 +202,11 @@ public class StepFragment extends Fragment {
 
     @Override
     public void onStop() {
+        super.onStop();
         if (Util.SDK_INT > 23) {
             releasePlayer();
         }
-        Timber.d("Exoplayer is onStop.");
-        super.onStop();
+        Timber.d("Exoplayer onStop.");
     }
 
     /**
@@ -245,6 +236,7 @@ public class StepFragment extends Fragment {
         Timber.d("OnDestroyView start position: ".concat(String.valueOf(mStartPosition)));
         releasePlayer();
     }
-
 }
+
+
 

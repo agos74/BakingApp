@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
+import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
 
 import java.util.List;
 
@@ -62,24 +63,30 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
 
-                // Create a new stepFragment
-                StepFragment stepFragment = new StepFragment();
-
-                // Set StepIndex and StepsList for the fragment
-                stepFragment.setStepsList(mStepsList);
-                stepFragment.setStepIndex(stepIndex);
-
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
-                fragmentManager.beginTransaction()
-                        .add(R.id.step_container, stepFragment)
-                        .commit();
+                StepFragment stepFragment = (StepFragment) fragmentManager.findFragmentByTag("STEP_FRAGMENT");
 
+                if (stepFragment == null) {
+                    Timber.d("stepFragment null, recreated");
+
+                    // Create a new stepFragment
+                    stepFragment = new StepFragment();
+                    // Set StepIndex and StepsList for the fragment
+                    stepFragment.setStepsList(mStepsList);
+                    stepFragment.setStepIndex(stepIndex);
+
+                    fragmentManager.beginTransaction()
+                            .add(R.id.step_container, stepFragment, "STEP_FRAGMENT")
+                            .commit();
+                }
 
                 // Create a new navigationFragment
                 NavigationFragment navigationFragment = new NavigationFragment();
-
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(Constants.FIRST_TIME_KEY, true);
+                navigationFragment.setArguments(bundle);
                 // Set StepIndex and StepsList for the fragment
                 navigationFragment.setStepsList(mStepsList);
                 navigationFragment.setStepIndex(stepIndex);
@@ -134,6 +141,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                 .replace(R.id.step_container, stepFragment)
                 .commit();
 
+        Timber.d("stepFragment replaced from onStepSelected");
+
     }
 
 
@@ -142,6 +151,9 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             hideSystemUI();
             Timber.d("FullScreen mode in landscape");
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Timber.d("Portrait mode");
+
         }
     }
 
@@ -162,3 +174,5 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
 
 
 }
+
+

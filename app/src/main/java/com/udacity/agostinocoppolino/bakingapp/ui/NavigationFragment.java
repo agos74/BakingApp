@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
+import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,20 +78,25 @@ public class NavigationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Load the saved state if there is one
-        if (savedInstanceState != null) {
-            mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
-            mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
-        }
 
         Timber.d("On Create View");
+        boolean firstTime = false;
 
-        // Inflate the Android-Me fragment layout
+        // Load the saved state if there is one
+        if (savedInstanceState != null) {
+
+            mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
+
+            firstTime = getArguments().getBoolean(Constants.FIRST_TIME_KEY, false);
+        }
+
+        // Inflate the Navigation fragment layout
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
         ButterKnife.bind(this, view);
 
-        populateStep();
+        populateStep(firstTime);
 
         return view;
     }
@@ -99,7 +105,7 @@ public class NavigationFragment extends Fragment {
     public void prev(ImageButton button) {
         if (mCurrentStep > 0) {
             mCurrentStep--;
-            populateStep();
+            populateStep(false);
         }
     }
 
@@ -107,11 +113,11 @@ public class NavigationFragment extends Fragment {
     public void next(ImageButton button) {
         if ((mStepsList.size() - 1) > mCurrentStep) {
             mCurrentStep++;
-            populateStep();
+            populateStep(false);
         }
     }
 
-    private void populateStep() {
+    private void populateStep(boolean firstTime) {
 
         int maxSteps = mStepsList.size() - 1;
         boolean nextVisible = mCurrentStep < maxSteps;
@@ -131,8 +137,10 @@ public class NavigationFragment extends Fragment {
 
         mNavigationTextView.setText(String.valueOf(mCurrentStep).concat(" of ").concat(String.valueOf(mStepsList.size() - 1)));
 
-        // Send the event to the host activity
-        mCallback.onStepSelected(mCurrentStep);
+        if (!firstTime) {
+            // Send the event to the host activity
+            mCallback.onStepSelected(mCurrentStep);
+        }
     }
 
     /**
