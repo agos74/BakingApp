@@ -20,6 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class NavigationFragment extends Fragment {
 
@@ -56,7 +57,7 @@ public class NavigationFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface OnStepSelectedListener {
-        public void onStepSelected(int stepIndex, List<Step> stepsList);
+        void onStepSelected(int stepIndex);
     }
 
     @Override
@@ -81,6 +82,8 @@ public class NavigationFragment extends Fragment {
             mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
         }
+
+        Timber.d("On Create View");
 
         // Inflate the Android-Me fragment layout
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
@@ -129,7 +132,7 @@ public class NavigationFragment extends Fragment {
         mNavigationTextView.setText(String.valueOf(mCurrentStep).concat(" of ").concat(String.valueOf(mStepsList.size() - 1)));
 
         // Send the event to the host activity
-        mCallback.onStepSelected(mCurrentStep, mStepsList);
+        mCallback.onStepSelected(mCurrentStep);
     }
 
     /**

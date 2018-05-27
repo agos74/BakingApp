@@ -1,12 +1,14 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
@@ -14,15 +16,20 @@ import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
 public class StepActivity extends AppCompatActivity implements NavigationFragment.OnStepSelectedListener {
 
+    private List<Step> mStepsList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+
+        Timber.d("On Create");
 
         ActionBar actionBar = this.getSupportActionBar();
         // Set the action bar back button to look like an up button
@@ -30,18 +37,24 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        ButterKnife.bind(this);
+
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }
 
+        checkFullScreen();
+
         int stepIndex = intent != null ? intent.getExtras().getInt("StepIndex") : -1;
 
         String recipeName = intent.getExtras().getString("RecipeName");
 
-        List<Step> stepsList = intent.getParcelableArrayListExtra("StepsList");
+        mStepsList = intent.getParcelableArrayListExtra("StepsList");
 
-        Timber.d(stepsList.toString());
+        Timber.d(mStepsList.toString());
+
+        Timber.d("savedinstancestate: ".concat(savedInstanceState == null ? "null" : "created"));
 
         if (stepIndex != -1) {
             this.setTitle(recipeName);
@@ -53,7 +66,7 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                 StepFragment stepFragment = new StepFragment();
 
                 // Set StepIndex and StepsList for the fragment
-                stepFragment.setStepsList(stepsList);
+                stepFragment.setStepsList(mStepsList);
                 stepFragment.setStepIndex(stepIndex);
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
@@ -68,7 +81,7 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                 NavigationFragment navigationFragment = new NavigationFragment();
 
                 // Set StepIndex and StepsList for the fragment
-                navigationFragment.setStepsList(stepsList);
+                navigationFragment.setStepsList(mStepsList);
                 navigationFragment.setStepIndex(stepIndex);
 
                 // Add the fragment to its container using a FragmentManager and a Transaction
@@ -79,6 +92,13 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             }
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkFullScreen();
+        Timber.d("On Resume");
     }
 
     private void closeOnError() {
@@ -99,7 +119,7 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
 
 
     @Override
-    public void onStepSelected(int stepIndex, List<Step> stepsList) {
+    public void onStepSelected(int stepIndex) {
         // The user selected a step in navigation fragment the NavigationFragment
         // Do something here to display that step
 
@@ -107,7 +127,7 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
         StepFragment stepFragment = new StepFragment();
 
         // Set StepIndex and StepsList for the fragment
-        stepFragment.setStepsList(stepsList);
+        stepFragment.setStepsList(mStepsList);
         stepFragment.setStepIndex(stepIndex);
 
         getSupportFragmentManager().beginTransaction()
@@ -115,4 +135,30 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                 .commit();
 
     }
+
+
+    private void checkFullScreen() {
+        // Checks the orientation of the screen
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideSystemUI();
+            Timber.d("FullScreen mode in landscape");
+        }
+    }
+
+    private void hideSystemUI() {
+        // Enables FullScreen mode.
+        View decorView = this.getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                // Set the content to appear under the system bars so that the
+                // content doesn't resize when the system bars hide and show.
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+
 }

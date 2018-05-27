@@ -24,6 +24,7 @@ public class IngredientsListFragment extends Fragment {
 
     private static final String INGREDIENTS_LIST_TEXT_KEY = "ingredients_list";
     private static final String INGREDIENTS_LIST_EXPANDED_TEXT_KEY = "ingredients_list_expanded";
+    private String RECIPE_SERVINGS_TEXT_KEY = "recipe_servings";
 
     private List<Ingredient> mIngredientsList;
     private int mServings;
@@ -59,6 +60,7 @@ public class IngredientsListFragment extends Fragment {
         // Load the saved state (the list of steps) if there is one
         if (savedInstanceState != null) {
             mIngredientsList = savedInstanceState.getParcelableArrayList(INGREDIENTS_LIST_TEXT_KEY);
+            mServings = savedInstanceState.getInt(RECIPE_SERVINGS_TEXT_KEY);
 
             // Restore the ingredients list expanded state
             if (savedInstanceState.containsKey(INGREDIENTS_LIST_EXPANDED_TEXT_KEY)) {
@@ -129,6 +131,7 @@ public class IngredientsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putParcelableArrayList(INGREDIENTS_LIST_TEXT_KEY, (ArrayList<? extends Parcelable>) mIngredientsList);
+        currentState.putInt(RECIPE_SERVINGS_TEXT_KEY, mServings);
         //Put the ingredients list expanded state in the outState bundle
         currentState.putBoolean(INGREDIENTS_LIST_EXPANDED_TEXT_KEY, mIngredientsListExpanded);
 

@@ -33,4 +33,6 @@
     <dimen name="margin_top_servings">22dp</dimen>
     <dimen name="margin_right_servings">40dp</dimen>
 
+    <dimen name="player_layout_margin">8dp</dimen>
+
 </resources>

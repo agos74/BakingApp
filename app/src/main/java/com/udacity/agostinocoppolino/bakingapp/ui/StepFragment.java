@@ -1,24 +1,34 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
@@ -26,14 +36,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import timber.log.Timber;
 
-public class StepFragment extends Fragment implements ExoPlayer.EventListener {
+
+public class StepFragment extends Fragment {
+
+    private static final String KEY_STEPS_LIST = "steps_list";
+    private static final String KEY_CURRENT_STEP = "current_step";
+    private static final String KEY_POSITION = "position";
+    private static final String KEY_CURRENT_WINDOW = "current_window";
+    private static final String KEY_PLAY_WHEN_READY = "play_when_ready";
 
     @BindView(R.id.playerView)
-    SimpleExoPlayerView mPlayerView;
+    PlayerView mPlayerView;
 
     @BindView(R.id.tv_short_description)
     TextView mShortDescriptionTextView;
@@ -41,13 +58,20 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @BindView(R.id.tv_description)
     TextView mDescriptionTextView;
 
-    private static final String STEPS_LIST = "steps_list";
-    private static final String CURRENT_STEP = "current_step";
+    @BindView(R.id.constraint_layout_step_fragment)
+    ConstraintLayout mConstraintLayout;
 
     private List<Step> mStepsList;
-    private int mCurrentStep;
+    private int mCurrentStep = -1;
+
+    private SimpleExoPlayer mExoPlayer;
+    private long mStartPosition;
+    private int mCurrentWindow;
+    private boolean mPlayWhenReady;
+    private View mView;
 
     public void setStepsList(List<Step> stepsList) {
+
         this.mStepsList = stepsList;
     }
 
@@ -61,23 +85,74 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public StepFragment() {
     }
 
+    private void clearStartPosition() {
+        mCurrentWindow = C.INDEX_UNSET;
+        mStartPosition = C.TIME_UNSET;
+        mPlayWhenReady = true;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    //    setRetainInstance(true);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Load the saved state if there is one
+
+        // Inflate the StepFragment layout
+        mView = inflater.inflate(R.layout.fragment_step, container, false);
+
+        ButterKnife.bind(this, mView);
+
         if (savedInstanceState != null) {
-            mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
-            mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
+            mStepsList = savedInstanceState.getParcelableArrayList(KEY_STEPS_LIST);
+            mCurrentStep = savedInstanceState.getInt(KEY_CURRENT_STEP);
+            mStartPosition = savedInstanceState.getLong(KEY_POSITION, C.TIME_UNSET);
+            mCurrentWindow = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
+            mPlayWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
         }
 
-        // Inflate the Android-Me fragment layout
-        View view = inflater.inflate(R.layout.fragment_step, container, false);
+        Timber.d("OnCreateView start position: ".concat(String.valueOf(mStartPosition)));
 
-        ButterKnife.bind(this, view);
+        // Initialize the player.
+//        initializePlayer();
 
         populateStep();
 
-        return view;
+        return mView;
+    }
+
+    /**
+     * Initialize ExoPlayer.
+     */
+    private void initializePlayer() {
+        if (mExoPlayer == null) {
+            // Create an instance of the ExoPlayer.
+
+            Timber.d("InitializePlayer start position: ".concat(String.valueOf(mStartPosition)));
+
+            DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(this.getContext());
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); //Provides estimates of the currently available bandwidth.
+            AdaptiveTrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
+            LoadControl loadControl = new DefaultLoadControl();
+
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
+            mPlayerView.setPlayer(mExoPlayer);
+
+            // Prepare the MediaSource.
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this.getContext(), "BakingApp");
+            MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mStepsList.get(mCurrentStep).getVideoURL()));
+
+            mExoPlayer.prepare(mediaSource, true, false);
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            mExoPlayer.seekTo(mStartPosition);
+
+        }
     }
 
     private void populateStep() {
@@ -94,38 +169,81 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
      */
     @Override
     public void onSaveInstanceState(Bundle currentState) {
-        currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
-        currentState.putInt(CURRENT_STEP, mCurrentStep);
+        currentState.putParcelableArrayList(KEY_STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
+        currentState.putInt(KEY_CURRENT_STEP, mCurrentStep);
+        if (mExoPlayer != null) {
+            updateStartPosition();
+            currentState.putLong(KEY_POSITION, mStartPosition);
+            currentState.putInt(KEY_CURRENT_WINDOW, mCurrentWindow);
+            currentState.putBoolean(KEY_PLAY_WHEN_READY, mPlayWhenReady);
+        }
+        Timber.d("OnSaveInstanceState start position: ".concat(String.valueOf(mStartPosition)));
+        super.onSaveInstanceState(currentState);
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
+    public void onStart() {
+        super.onStart();
+        Timber.d("Exoplayer onStart.");
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
     }
 
     @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
+    public void onResume() {
+        super.onResume();
+        Timber.d("Exoplayer onResume.");
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            initializePlayer();
+            Timber.d("OnResume start position: ".concat(String.valueOf(mStartPosition)));
+        }
     }
 
     @Override
-    public void onLoadingChanged(boolean isLoading) {
-
+    public void onPause() {
+        Timber.d("Exoplayer onPause.");
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
     }
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
+    public void onStop() {
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+        Timber.d("Exoplayer is onStop.");
+        super.onStop();
     }
 
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
+    /**
+     * Release ExoPlayer.
+     */
+    private void releasePlayer() {
+        if (mExoPlayer != null) {
+            updateStartPosition();
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
-    @Override
-    public void onPositionDiscontinuity() {
+    private void updateStartPosition() {
+        mStartPosition = mExoPlayer.getContentPosition();
+        mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
+        mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+    }
 
+    /**
+     * Release the player when the fragment is destroyed.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.d("OnDestroyView start position: ".concat(String.valueOf(mStartPosition)));
+        releasePlayer();
     }
 
 }
