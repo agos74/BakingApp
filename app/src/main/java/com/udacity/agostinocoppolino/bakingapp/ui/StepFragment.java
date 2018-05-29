@@ -1,17 +1,18 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -25,6 +26,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
@@ -47,6 +50,9 @@ public class StepFragment extends Fragment {
     @BindView(R.id.playerView)
     PlayerView mPlayerView;
 
+    @BindView(R.id.iv_step)
+    AppCompatImageView mStepImageView;
+
     @BindView(R.id.tv_short_description)
     TextView mShortDescriptionTextView;
 
@@ -57,15 +63,14 @@ public class StepFragment extends Fragment {
     ConstraintLayout mConstraintLayout;
 
     private List<Step> mStepsList;
-    private int mCurrentStep = -1;
+    private int mCurrentStep;
 
     private SimpleExoPlayer mExoPlayer;
-    private long mStartPosition = C.TIME_UNSET;
-    private int mCurrentWindow = C.INDEX_UNSET;
-    private boolean mPlayWhenReady = false;
+    private long mStartPosition;
+    private int mCurrentWindow;
+    private boolean mPlayWhenReady;
 
     public void setStepsList(List<Step> stepsList) {
-
         this.mStepsList = stepsList;
     }
 
@@ -80,8 +85,8 @@ public class StepFragment extends Fragment {
     }
 
     private void clearStartPosition() {
-        mCurrentWindow = C.INDEX_UNSET;
-        mStartPosition = C.TIME_UNSET;
+        mCurrentWindow = 0;
+        mStartPosition = 0;
         mPlayWhenReady = true;
     }
 
@@ -90,7 +95,7 @@ public class StepFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Inflate the StepFragment layout
-        final View view = inflater.inflate(R.layout.fragment_step, container, false);
+        View view = inflater.inflate(R.layout.fragment_step, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -101,15 +106,12 @@ public class StepFragment extends Fragment {
             mStartPosition = savedInstanceState.getLong(KEY_POSITION);
             mCurrentWindow = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
             mPlayWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
+        } else {
+            clearStartPosition();
         }
         Timber.d("OnCreateView END start position: ".concat(String.valueOf(mStartPosition)));
 
         populateStep();
-
-        // Initialize the player.
-//        initializePlayer();
-
-//        populateStep();
 
         return view;
     }
@@ -119,7 +121,7 @@ public class StepFragment extends Fragment {
      */
     private void initializePlayer() {
         if (mExoPlayer == null) {
-            // Create an instance of the ExoPlayer.
+            // Create an instance of the ExoPlayer
 
             Timber.d("InitializePlayer start position: ".concat(String.valueOf(mStartPosition)));
 
@@ -132,12 +134,12 @@ public class StepFragment extends Fragment {
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
 
-            // Prepare the MediaSource.
+            // Prepare the MediaSource
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this.getContext(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mStepsList.get(mCurrentStep).getVideoURL()));
 
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.seekTo(mStartPosition);
+            mExoPlayer.seekTo(mCurrentWindow, mStartPosition);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
 
         }
@@ -151,7 +153,27 @@ public class StepFragment extends Fragment {
         mShortDescriptionTextView.setText(step.getShortDescription());
         mDescriptionTextView.setText(step.getDescription());
 
-        initializePlayer();
+        if (!step.getVideoURL().equals("")) {
+
+            // Initialize the player
+            initializePlayer();
+            // Hide imageView
+            mStepImageView.setVisibility(View.GONE);
+        } else if (!step.getThumbnailURL().equals("")) {
+            Picasso.with(mStepImageView.getContext()).load(step.getThumbnailURL())
+                    .error(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.progress_animation)
+                    .into(mStepImageView);
+
+            mStepImageView.setVisibility(View.VISIBLE);
+            mPlayerView.setVisibility(View.GONE);
+        } else {
+            // Load default image if no video and no thumbnail are present
+            mStepImageView.setImageResource(R.drawable.ic_launcher_foreground);
+            mStepImageView.setVisibility(View.VISIBLE);
+            mPlayerView.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -169,7 +191,6 @@ public class StepFragment extends Fragment {
             currentState.putBoolean(KEY_PLAY_WHEN_READY, mPlayWhenReady);
         }
         Timber.d("OnSaveInstanceState start position: ".concat(String.valueOf(mStartPosition)));
-        super.onSaveInstanceState(currentState);
     }
 
     @Override
