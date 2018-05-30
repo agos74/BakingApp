@@ -10,10 +10,16 @@ import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
+import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
 
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
+
+    // Track whether to display a two-pane or single-pane UI
+    // A single-pane display refers to phone screens, and two-pane to larger tablet screens
+    private boolean mTwoPane;
 
 
     @Override
@@ -34,11 +40,10 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        Recipe recipe = intent != null ? (Recipe) intent.getParcelableExtra("Recipe") : null;
+        Recipe recipe = intent != null ? (Recipe) intent.getParcelableExtra(Constants.RECIPE_KEY) : null;
 
         if (recipe != null) {
             this.setTitle(recipe.getName());
-
 
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
@@ -66,6 +71,31 @@ public class DetailActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .add(R.id.steps_list_container, stepsListFragment)
                         .commit();
+
+                // Determine if you're creating a two-pane or single-pane display
+                if (findViewById(R.id.step_container) != null) {
+                    // This FrameLayout will only initially exist in the two-pane tablet case
+                    mTwoPane = true;
+
+                    Timber.d("Two Pane");
+
+                    // Create a new stepFragment
+                    StepFragment stepFragment = new StepFragment();
+
+                    // Set StepIndex and StepsList for the fragment
+                    stepFragment.setStepsList(recipe.getSteps());
+                    stepFragment.setStepIndex(0);
+
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.step_container, stepFragment)
+                            .commit();
+
+                } else {
+
+                    // We're in single-pane mode and displaying fragments on a phone in separate activities
+                    mTwoPane = false;
+
+                }
             }
         }
 
@@ -75,6 +105,7 @@ public class DetailActivity extends AppCompatActivity {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

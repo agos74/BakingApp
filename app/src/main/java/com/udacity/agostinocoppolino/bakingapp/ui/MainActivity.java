@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.udacity.agostinocoppolino.bakingapp.R;
+import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
 import com.udacity.agostinocoppolino.bakingapp.utils.NetworkUtils;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
 
@@ -230,11 +231,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
      */
     @Override
     public void onClick(Recipe recipe) {
-        Context context = this;
         // Launch the DetailActivity using an explicit Intent
-        Class destinationClass = DetailActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra("Recipe", recipe);
+        Intent intentToStartDetailActivity = new Intent(this, DetailActivity.class);
+        intentToStartDetailActivity.putExtra(Constants.RECIPE_KEY, recipe);
         startActivity(intentToStartDetailActivity);
     }
 

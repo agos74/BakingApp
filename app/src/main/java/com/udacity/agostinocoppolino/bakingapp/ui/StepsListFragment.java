@@ -1,6 +1,5 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -84,14 +83,37 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      */
 
     public void onClick(int stepIndex) {
-        Context context = this.getContext();
-        // Launch the StepActivity using an explicit Intent
-        Class destinationClass = StepActivity.class;
-        Intent intentToStartStepActivity = new Intent(context, destinationClass);
-        intentToStartStepActivity.putExtra("StepIndex", stepIndex);
-        intentToStartStepActivity.putExtra("RecipeName", mRecipeName);
-        intentToStartStepActivity.putParcelableArrayListExtra("StepsList", (ArrayList<? extends Parcelable>) mStepsList);
-        startActivity(intentToStartStepActivity);
+
+        // Determine if you're creating a two-pane or single-pane display
+        //       boolean isTablet = getResources().getBoolean(R.bool.isTablet)
+
+        // This FrameLayout will only initially exist in the two-pane tablet case
+        boolean isTablet = this.getActivity().findViewById(R.id.step_container) != null;
+
+        if (isTablet) {
+
+            // Replace the fragment with the new step selected
+
+            // Create a new stepFragment
+            StepFragment stepFragment = new StepFragment();
+
+            // Set StepIndex and StepsList for the fragment
+            stepFragment.setStepsList(mStepsList);
+            stepFragment.setStepIndex(stepIndex);
+
+            this.getFragmentManager().beginTransaction()
+                    .replace(R.id.step_container, stepFragment)
+                    .commit();
+
+        } else { //Phone
+            // Launch the StepActivity using an explicit Intent
+            Intent intentToStartStepActivity = new Intent(this.getContext(), StepActivity.class);
+            intentToStartStepActivity.putExtra("StepIndex", stepIndex);
+            intentToStartStepActivity.putExtra("RecipeName", mRecipeName);
+            intentToStartStepActivity.putParcelableArrayListExtra("StepsList", (ArrayList<? extends Parcelable>) mStepsList);
+            startActivity(intentToStartStepActivity);
+        }
+
     }
 
 }
