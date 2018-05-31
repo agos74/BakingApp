@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,6 +121,10 @@ public class StepFragment extends Fragment {
      * Initialize ExoPlayer.
      */
     private void initializePlayer() {
+        if (TextUtils.isEmpty(mStepsList.get(mCurrentStep).getVideoURL())) {
+            return;
+        }
+
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer
 
@@ -153,7 +158,7 @@ public class StepFragment extends Fragment {
         mShortDescriptionTextView.setText(step.getShortDescription());
         mDescriptionTextView.setText(step.getDescription());
 
-        if (!step.getVideoURL().equals("")) {
+        if (!TextUtils.isEmpty(step.getVideoURL())) {
 
             // Initialize the player
             initializePlayer();
@@ -166,11 +171,13 @@ public class StepFragment extends Fragment {
                     .into(mStepImageView);
 
             mStepImageView.setVisibility(View.VISIBLE);
+            releasePlayer();
             mPlayerView.setVisibility(View.GONE);
         } else {
             // Load default image if no video and no thumbnail are present
             mStepImageView.setImageResource(R.drawable.ic_launcher_foreground);
             mStepImageView.setVisibility(View.VISIBLE);
+            releasePlayer();
             mPlayerView.setVisibility(View.GONE);
         }
 
