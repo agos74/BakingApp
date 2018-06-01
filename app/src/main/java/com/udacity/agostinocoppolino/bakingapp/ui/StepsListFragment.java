@@ -24,7 +24,8 @@ import butterknife.ButterKnife;
 
 public class StepsListFragment extends Fragment implements StepAdapter.StepAdapterOnClickHandler {
 
-    private static final String STEPS_LIST = "steps_list";
+    private static final String STEPS_LIST_KEY = "steps_list";
+    private static final String RECIPE_NAME_KEY = "recipe_name";
 
     //ButterKnife Binding
     @BindView(R.id.recyclerview_steps)
@@ -40,7 +41,8 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
 
         // Load the saved state (the list of steps) if there is one
         if (savedInstanceState != null) {
-            mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST_KEY);
+            mRecipeName = savedInstanceState.getString(RECIPE_NAME_KEY);
         }
 
         final View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
@@ -72,7 +74,8 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      */
     @Override
     public void onSaveInstanceState(Bundle currentState) {
-        currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
+        currentState.putParcelableArrayList(STEPS_LIST_KEY, (ArrayList<? extends Parcelable>) mStepsList);
+        currentState.putString(RECIPE_NAME_KEY, mRecipeName);
     }
 
     /**
