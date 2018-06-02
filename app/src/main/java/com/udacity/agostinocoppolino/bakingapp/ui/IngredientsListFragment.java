@@ -76,7 +76,7 @@ public class IngredientsListFragment extends Fragment {
         }
 
         // Set servings
-        String servingText = mServingsTextView.getContext().getString(R.string.servings_text_with_placeholder, String.valueOf(mServings));
+        String servingText = String.valueOf(mServings);
         mServingsTextView.setText(servingText);
 
         // Create the adapter
@@ -132,7 +132,7 @@ public class IngredientsListFragment extends Fragment {
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putParcelableArrayList(INGREDIENTS_LIST_TEXT_KEY, (ArrayList<? extends Parcelable>) mIngredientsList);
         currentState.putInt(RECIPE_SERVINGS_TEXT_KEY, mServings);
-        //Put the ingredients list expanded state in the outState bundle
+        //Put the ingredients list expanded state in the currentState bundle
         currentState.putBoolean(INGREDIENTS_LIST_EXPANDED_TEXT_KEY, mIngredientsListExpanded);
 
     }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/steps_list_title"
         style="@style/sectionHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,12 +15,26 @@
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/tv_steps_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_top_steps_count"
+        android:text="@string/steps_count_with_placeholder"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_steps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/steps_list_title"
         android:nestedScrollingEnabled="false"
         tools:targetApi="lollipop">
 
     </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+
+</RelativeLayout>

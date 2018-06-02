@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
@@ -30,8 +31,16 @@
     <dimen name="recipe_grid_height">150dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="step_item_height">50dp</dimen>
-    <dimen name="margin_top_servings">22dp</dimen>
-    <dimen name="margin_right_servings">40dp</dimen>
+
+    <dimen name="margin_top_servings">12dp</dimen>
+    <dimen name="margin_right_servings">50dp</dimen>
+    <dimen name="margin_top_servings_image">10dp</dimen>
+    <dimen name="margin_top_servings_text">6dp</dimen>
+    <dimen name="height_servings_image">20dp</dimen>
+    <dimen name="text_sz_servings">20sp</dimen>
+
+    <dimen name="margin_top_steps_count">20dp</dimen>
+
 
     <dimen name="player_layout_margin">8dp</dimen>
 

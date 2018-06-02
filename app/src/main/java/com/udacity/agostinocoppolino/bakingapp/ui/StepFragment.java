@@ -1,6 +1,6 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
-import android.graphics.BitmapFactory;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
@@ -158,30 +157,44 @@ public class StepFragment extends Fragment {
         mShortDescriptionTextView.setText(step.getShortDescription());
         mDescriptionTextView.setText(step.getDescription());
 
-        if (!TextUtils.isEmpty(step.getVideoURL())) {
-
+        if (!TextUtils.isEmpty(step.getVideoURL())) { // Video is present
             // Initialize the player
             initializePlayer();
-            // Hide imageView
+            // Hide image
             mStepImageView.setVisibility(View.GONE);
         } else if (!step.getThumbnailURL().equals("")) {
+            // Show thumbnail
             Picasso.with(mStepImageView.getContext()).load(step.getThumbnailURL())
                     .error(R.drawable.ic_launcher_foreground)
                     .placeholder(R.drawable.progress_animation)
                     .into(mStepImageView);
-
-            mStepImageView.setVisibility(View.VISIBLE);
-            releasePlayer();
-            mPlayerView.setVisibility(View.GONE);
+            noVideoUI();
         } else {
             // Load default image if no video and no thumbnail are present
             mStepImageView.setImageResource(R.drawable.ic_launcher_foreground);
-            mStepImageView.setVisibility(View.VISIBLE);
-            releasePlayer();
-            mPlayerView.setVisibility(View.GONE);
+            noVideoUI();
         }
 
+    }
 
+    // Show image and hide video
+    private void noVideoUI() {
+        if (isLandscapePhone()) {
+            mShortDescriptionTextView.setVisibility(View.VISIBLE);
+            mDescriptionTextView.setVisibility(View.VISIBLE);
+        }
+        mStepImageView.setVisibility(View.VISIBLE);
+        mPlayerView.setVisibility(View.GONE);
+        releasePlayer();
+    }
+
+    private boolean isLandscapePhone() {
+        // Checks the screen orientation and if we are in phone (fragment is in StepActivity)
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && this.getActivity().getClass().getSimpleName().equals("StepActivity")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -23,7 +24,10 @@ import timber.log.Timber;
 
 public class StepActivity extends AppCompatActivity implements NavigationFragment.OnStepSelectedListener {
 
+    private static final String IS_FULLSCREEN_KEY = "is_fullscreen";
+
     private List<Step> mStepsList;
+    private boolean isFullScreen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +49,6 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             closeOnError();
         }
 
-        checkFullScreen();
-
         int stepIndex = intent != null ? intent.getExtras().getInt("StepIndex") : -1;
 
         String recipeName = intent.getExtras().getString("RecipeName");
@@ -59,6 +61,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
 
         if (stepIndex != -1) {
             this.setTitle(recipeName);
+
+            isFullScreen = !TextUtils.isEmpty(mStepsList.get(stepIndex).getVideoURL());
 
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
@@ -76,6 +80,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                     // Set StepIndex and StepsList for the fragment
                     stepFragment.setStepsList(mStepsList);
                     stepFragment.setStepIndex(stepIndex);
+
+                    checkFullScreen();
 
                     fragmentManager.beginTransaction()
                             .add(R.id.step_container, stepFragment, "STEP_FRAGMENT")
@@ -96,7 +102,15 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                         .add(R.id.navigation_container, navigationFragment)
                         .commit();
 
+            } else {
+                //restore isFullscreen boolean
+                isFullScreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY);
+
+                checkFullScreen();
+
             }
+
+
         }
 
     }
@@ -137,6 +151,9 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
         stepFragment.setStepsList(mStepsList);
         stepFragment.setStepIndex(stepIndex);
 
+        isFullScreen = !TextUtils.isEmpty(mStepsList.get(stepIndex).getVideoURL());
+        checkFullScreen();
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
@@ -147,13 +164,14 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
 
 
     private void checkFullScreen() {
-        // Checks the orientation of the screen
+        // Checks the orientation of the screen, activate fullscreen in landscape
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            hideSystemUI();
-            Timber.d("FullScreen mode in landscape");
+            if (isFullScreen) {
+                hideSystemUI();
+                Timber.d("FullScreen mode in landscape");
+            }
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             Timber.d("Portrait mode");
-
         }
     }
 
@@ -172,7 +190,11 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_FULLSCREEN_KEY, isFullScreen);
+    }
 }
 
 
