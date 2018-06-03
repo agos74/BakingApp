@@ -1,13 +1,14 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
@@ -19,6 +20,10 @@ import butterknife.ButterKnife;
 
 class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder> {
 
+    private static final int VIEW_TYPE_TOP = 0;
+    private static final int VIEW_TYPE_MIDDLE = 1;
+    private static final int VIEW_TYPE_BOTTOM = 2;
+
     // Keeps track of the context and list of steps to display
     private final Context mContext;
     private final List<Step> mStepsList;
@@ -29,18 +34,23 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
      */
     private final StepAdapterOnClickHandler mClickHandler;
 
+    private final boolean isTablet;
+    private final int mStepSelected;
+
     /**
      * The interface that receives onClick messages.
      */
     public interface StepAdapterOnClickHandler {
-        void onClick(int stepIndex);
+        void onClick(int stepIndex, View currentSelectedView, ViewGroup mListView);
     }
 
 
-    public StepAdapter(Context context, List<Step> stepsList, StepAdapterOnClickHandler mClickHandler) {
+    public StepAdapter(Context context, List<Step> stepsList, StepAdapterOnClickHandler mClickHandler, boolean isTablet, int stepSelected) {
         this.mContext = context;
         this.mStepsList = stepsList;
         this.mClickHandler = mClickHandler;
+        this.isTablet = isTablet;
+        this.mStepSelected = stepSelected;
     }
 
     /**
@@ -54,7 +64,7 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         int layoutIdForListItem = R.layout.step_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(layoutIdForListItem, parent, false);
-        return new StepAdapterViewHolder(view);
+        return new StepAdapterViewHolder(view, parent);
     }
 
     /**
@@ -69,6 +79,38 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
 
         holder.mStepShortDescriptionTextView.setText((position) + " - " + stepForThisPosition.getShortDescription());
 
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_TOP:
+                // The top of the line has to be rounded
+                holder.mItemLine.setBackground(holder.mItemLine.getResources().getDrawable(R.drawable.line_bg_top));
+                break;
+            case VIEW_TYPE_MIDDLE:
+                // Only the color could be enough
+                // but a drawable can be used to make the cap rounded also here
+                holder.mItemLine.setBackground(holder.mItemLine.getResources().getDrawable(R.drawable.line_bg_middle));
+                break;
+            case VIEW_TYPE_BOTTOM:
+                holder.mItemLine.setBackground(holder.mItemLine.getResources().getDrawable(R.drawable.line_bg_bottom));
+                break;
+        }
+
+        if (isTablet) {
+            if (mStepSelected == position) {
+                holder.mStepSelectedCardView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mStepSelectedCardView.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return VIEW_TYPE_TOP;
+        } else if (position == mStepsList.size() - 1) {
+            return VIEW_TYPE_BOTTOM;
+        }
+        return VIEW_TYPE_MIDDLE;
     }
 
     @Override
@@ -81,20 +123,27 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         @BindView(R.id.tv_short_description)
         TextView mStepShortDescriptionTextView;
 
-        @BindView(R.id.cardview_step_item)
-        CardView mStepItemCardView;
+        @BindView(R.id.item_line)
+        FrameLayout mItemLine;
 
-        public StepAdapterViewHolder(View itemView) {
+        @BindView(R.id.cardview_step_selected)
+        CardView mStepSelectedCardView;
+
+        private ViewGroup mListView;
+
+        public StepAdapterViewHolder(View itemView, ViewGroup listView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-
+            mListView = listView;
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View currentSelectedView) {
             int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(adapterPosition);
+            mClickHandler.onClick(adapterPosition, currentSelectedView, mListView);
         }
     }
+
+
 }

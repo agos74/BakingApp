@@ -1,8 +1,6 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
     private static final String STEPS_LIST_KEY = "steps_list";
     private static final String RECIPE_NAME_KEY = "recipe_name";
     private static final String CURRENT_STEP_KEY = "current_step";
+    private static final String FIRST_TIME_STARTUP_KEY = "first_time_startup";
 
     //ButterKnife Binding
     @BindView(R.id.recyclerview_steps)
@@ -45,6 +43,9 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
 
     private int mCurrentStep = 0;
 
+    private View mCurrentSelectedView;
+    private boolean mFirstTimeStartup = true;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
             mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST_KEY);
             mRecipeName = savedInstanceState.getString(RECIPE_NAME_KEY);
             mCurrentStep = savedInstanceState.getInt(CURRENT_STEP_KEY);
+            mFirstTimeStartup = savedInstanceState.getBoolean(FIRST_TIME_STARTUP_KEY);
         }
 
         final View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
@@ -70,7 +72,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
 
         // Create the adapter
         // This adapter takes in the context and an ArrayList of Step to display
-        StepAdapter mStepAdapter = new StepAdapter(getContext(), mStepsList, this);
+        StepAdapter mStepAdapter = new StepAdapter(getContext(), mStepsList, this, isTablet(), mCurrentStep);
 
         // Set the adapter on the RecyclerView
         mStepRecyclerView.setAdapter(mStepAdapter);
@@ -94,6 +96,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
         currentState.putParcelableArrayList(STEPS_LIST_KEY, (ArrayList<? extends Parcelable>) mStepsList);
         currentState.putString(RECIPE_NAME_KEY, mRecipeName);
         currentState.putInt(CURRENT_STEP_KEY, mCurrentStep);
+        currentState.putBoolean(FIRST_TIME_STARTUP_KEY, mFirstTimeStartup);
     }
 
     /**
@@ -101,9 +104,11 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      * clicks.
      *
      * @param stepIndex The index of the step that was clicked
+     * @param v         The current selected View
+     * @param listView
      */
 
-    public void onClick(int stepIndex) {
+    public void onClick(int stepIndex, View v, ViewGroup listView) {
 
         // Determine if you're creating a two-pane or single-pane display
 
@@ -113,6 +118,20 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
             mCurrentStep = stepIndex;
 
             updateStepsCount();
+
+            // Highlight current step selected
+            if (mFirstTimeStartup) {// first time, highlight first step
+                mCurrentSelectedView = listView.getChildAt(0);
+                mFirstTimeStartup = false;
+            } else {
+                //reset selected state
+                resetSelected(listView);
+            }
+            if (mCurrentSelectedView != null && mCurrentSelectedView != v) {
+                mCurrentSelectedView.findViewById(R.id.cardview_step_selected).setVisibility(View.INVISIBLE);
+            }
+            mCurrentSelectedView = v;
+            mCurrentSelectedView.findViewById(R.id.cardview_step_selected).setVisibility(View.VISIBLE);
 
             // Replace the fragment with the new step selected
 
@@ -137,6 +156,16 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
         }
 
     }
+
+    private void resetSelected(ViewGroup listView) {
+        int count = listView.getChildCount();
+        // Iterate through all children, setting to invisibile
+        for (int i = 0; i < count; i++) {
+            final View child = listView.getChildAt(i);
+            child.findViewById(R.id.cardview_step_selected).setVisibility(View.INVISIBLE);
+        }
+    }
+
 
     private void updateStepsCount() {
         String stepsCountText = mStepsCountTextView.getResources().getString(R.string.steps_count_with_placeholder, String.valueOf(mCurrentStep), String.valueOf(mStepsList.size() - 1));
