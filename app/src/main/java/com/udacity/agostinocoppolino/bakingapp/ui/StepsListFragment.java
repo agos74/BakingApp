@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.udacity.agostinocoppolino.bakingapp.Constants;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
 
@@ -124,14 +125,17 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
                 mCurrentSelectedView = listView.getChildAt(0);
                 mFirstTimeStartup = false;
             } else {
-                //reset selected state
+                //reset steps selected state
                 resetSelected(listView);
             }
             if (mCurrentSelectedView != null && mCurrentSelectedView != v) {
-                mCurrentSelectedView.findViewById(R.id.cardview_step_selected).setVisibility(View.INVISIBLE);
+                mCurrentSelectedView.findViewById(R.id.iv_step_selected).setVisibility(View.INVISIBLE);
+                mCurrentSelectedView.findViewById(R.id.item_circle).setBackground(getResources().getDrawable(R.drawable.ic_circle_black_24dp));
             }
             mCurrentSelectedView = v;
-            mCurrentSelectedView.findViewById(R.id.cardview_step_selected).setVisibility(View.VISIBLE);
+            mCurrentSelectedView.findViewById(R.id.iv_step_selected).setVisibility(View.VISIBLE);
+            mCurrentSelectedView.findViewById(R.id.item_circle).setBackground(getResources().getDrawable(R.drawable.ic_circle_black_full_24dp));
+
 
             // Replace the fragment with the new step selected
 
@@ -149,8 +153,8 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
         } else { //Phone
             // Launch the StepActivity using an explicit Intent
             Intent intentToStartStepActivity = new Intent(this.getContext(), StepActivity.class);
-            intentToStartStepActivity.putExtra("StepIndex", stepIndex);
-            intentToStartStepActivity.putExtra("RecipeName", mRecipeName);
+            intentToStartStepActivity.putExtra(Constants.EXTRA_STEP_INDEX_KEY, stepIndex);
+            intentToStartStepActivity.putExtra(Constants.EXTRA_RECIPE_NAME_KEY, mRecipeName);
             intentToStartStepActivity.putParcelableArrayListExtra("StepsList", (ArrayList<? extends Parcelable>) mStepsList);
             startActivity(intentToStartStepActivity);
         }
@@ -159,10 +163,11 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
 
     private void resetSelected(ViewGroup listView) {
         int count = listView.getChildCount();
-        // Iterate through all children, setting to invisibile
+        // Iterate through all children, resetting selected state
         for (int i = 0; i < count; i++) {
             final View child = listView.getChildAt(i);
-            child.findViewById(R.id.cardview_step_selected).setVisibility(View.INVISIBLE);
+            child.findViewById(R.id.iv_step_selected).setVisibility(View.INVISIBLE);
+            child.findViewById(R.id.item_circle).setBackground(getResources().getDrawable(R.drawable.ic_circle_black_24dp));
         }
     }
 

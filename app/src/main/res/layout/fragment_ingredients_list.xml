@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:divider="#005b00"
+                android:divider="@color/colorPrimaryDark"
                 android:dividerHeight="1dp"
                 android:visibility="gone" />
 

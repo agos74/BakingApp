@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
-import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
+import com.udacity.agostinocoppolino.bakingapp.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class NavigationFragment extends Fragment {
     }
 
     @OnClick(R.id.imageButton_prev)
-    public void prev(ImageButton button) {
+    public void prev() {
         if (mCurrentStep > 0) {
             mCurrentStep--;
             populateStep(false);
@@ -110,7 +110,7 @@ public class NavigationFragment extends Fragment {
     }
 
     @OnClick(R.id.imageButton_next)
-    public void next(ImageButton button) {
+    public void next() {
         if ((mStepsList.size() - 1) > mCurrentStep) {
             mCurrentStep++;
             populateStep(false);

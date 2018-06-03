@@ -5,16 +5,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Step;
-import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
+import com.udacity.agostinocoppolino.bakingapp.Constants;
 
 import java.util.List;
 
@@ -25,9 +28,13 @@ import timber.log.Timber;
 public class StepActivity extends AppCompatActivity implements NavigationFragment.OnStepSelectedListener {
 
     private static final String IS_FULLSCREEN_KEY = "is_fullscreen";
+    private static final String CURRENT_STEP_KEY = "current_step";
 
     private List<Step> mStepsList;
     private boolean isFullScreen;
+    private int mCurrentStep;
+
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +49,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
@@ -49,9 +58,9 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             closeOnError();
         }
 
-        int stepIndex = intent != null ? intent.getExtras().getInt("StepIndex") : -1;
+        int stepIndex = intent != null ? intent.getExtras().getInt(Constants.EXTRA_STEP_INDEX_KEY) : -1;
 
-        String recipeName = intent.getExtras().getString("RecipeName");
+        String recipeName = intent.getExtras().getString(Constants.EXTRA_RECIPE_NAME_KEY);
 
         mStepsList = intent.getParcelableArrayListExtra("StepsList");
 
@@ -63,6 +72,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             this.setTitle(recipeName);
 
             isFullScreen = !TextUtils.isEmpty(mStepsList.get(stepIndex).getVideoURL());
+
+            mCurrentStep = stepIndex;
 
             // Only create new fragments when there is no previously saved state
             if (savedInstanceState == null) {
@@ -105,6 +116,7 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             } else {
                 //restore isFullscreen boolean
                 isFullScreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY);
+                mCurrentStep = savedInstanceState.getInt(CURRENT_STEP_KEY);
 
                 checkFullScreen();
 
@@ -160,6 +172,8 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
 
         Timber.d("stepFragment replaced from onStepSelected");
 
+        mCurrentStep = stepIndex;
+
     }
 
 
@@ -194,6 +208,92 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_FULLSCREEN_KEY, isFullScreen);
+        outState.putInt(CURRENT_STEP_KEY, mCurrentStep);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    //Implements swipe left/right to change step
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
+                        } else {
+                            onSwipeLeft();
+                        }
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
+
+        private void onSwipeRight() {
+            Timber.d("swipe Right");
+
+            if (mCurrentStep > 0) {
+                mCurrentStep--;
+                // Send the event to the host activity
+                onStepSelected(mCurrentStep);
+
+                refreshNavigationUI();
+            }
+
+        }
+
+        private void onSwipeLeft() {
+            Timber.d("swipe Left");
+
+            if ((mStepsList.size() - 1) > mCurrentStep) {
+                mCurrentStep++;
+                // Send the event to the host activity
+                onStepSelected(mCurrentStep);
+
+                refreshNavigationUI();
+            }
+
+        }
+
+        private void refreshNavigationUI() {
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            // Create a new navigationFragment
+            NavigationFragment navigationFragment = new NavigationFragment();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(Constants.FIRST_TIME_KEY, false);
+            navigationFragment.setArguments(bundle);
+            // Set StepIndex and StepsList for the fragment
+            navigationFragment.setStepsList(mStepsList);
+            navigationFragment.setStepIndex(mCurrentStep);
+
+            // Replace the fragment to its container using a FragmentManager and a Transaction
+            fragmentManager.beginTransaction()
+                    .replace(R.id.navigation_container, navigationFragment)
+                    .commit();
+
+        }
     }
 }
 

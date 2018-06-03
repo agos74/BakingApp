@@ -9,24 +9,18 @@
     android:layout_marginStart="@dimen/card_margin"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardview_step_selected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- the circular icon on the left -->
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_step_selected"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/ic_launcher_background"
-        android:elevation="10dp"
+        android:background="@drawable/ic_circle_bg_full_24dp"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
         android:visibility="gone"
-        app:cardCornerRadius="4dp">
-        <!-- the circular icon on the left -->
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@color/ic_launcher_background"
-            android:foreground="@drawable/ic_launcher_foreground"
-            android:scaleType="centerCrop" />
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
-    </android.support.v7.widget.CardView>
 
     <!-- the blue line -->
     <FrameLayout
@@ -37,6 +31,7 @@
 
         <!-- the semi transparent circle on the line -->
         <View
+            android:id="@+id/item_circle"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:background="@drawable/ic_circle_black_24dp" />
@@ -50,16 +45,16 @@
         android:layout_weight="1"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
-        android:paddingBottom="32dp"
+        android:paddingBottom="24dp"
         android:paddingStart="24dp">
 
         <TextView
             android:id="@+id/tv_short_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:ellipsize="end"
-            android:text="@string/recipe_step_description" />
+            android:text="@string/recipe_step_description"
+            android:textStyle="italic" />
 
         <!-- other views -->
 

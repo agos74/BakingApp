@@ -16,9 +16,10 @@
         <ImageButton
             android:id="@+id/imageButton_prev"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+            android:background="@color/colorAccent"
+            app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
         <TextView
             android:id="@+id/tv_navigation"
@@ -33,9 +34,10 @@
         <ImageButton
             android:id="@+id/imageButton_next"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
+            android:background="@color/colorAccent"
+            app:srcCompat="@drawable/ic_arrow_forward_24dp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -2,7 +2,6 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,6 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
     public interface StepAdapterOnClickHandler {
         void onClick(int stepIndex, View currentSelectedView, ViewGroup mListView);
     }
-
 
     public StepAdapter(Context context, List<Step> stepsList, StepAdapterOnClickHandler mClickHandler, boolean isTablet, int stepSelected) {
         this.mContext = context;
@@ -97,8 +95,10 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         if (isTablet) {
             if (mStepSelected == position) {
                 holder.mStepSelectedCardView.setVisibility(View.VISIBLE);
+                holder.mItemCircle.setBackground(holder.mItemCircle.getResources().getDrawable(R.drawable.ic_circle_black_full_24dp));
             } else {
                 holder.mStepSelectedCardView.setVisibility(View.INVISIBLE);
+                holder.mItemCircle.setBackground(holder.mItemCircle.getResources().getDrawable(R.drawable.ic_circle_black_24dp));
             }
         }
     }
@@ -126,8 +126,11 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         @BindView(R.id.item_line)
         FrameLayout mItemLine;
 
-        @BindView(R.id.cardview_step_selected)
-        CardView mStepSelectedCardView;
+        @BindView(R.id.iv_step_selected)
+        AppCompatImageView mStepSelectedCardView;
+
+        @BindView(R.id.item_circle)
+        View mItemCircle;
 
         private ViewGroup mListView;
 

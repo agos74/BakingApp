@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
-import com.udacity.agostinocoppolino.bakingapp.utils.Constants;
+import com.udacity.agostinocoppolino.bakingapp.Constants;
 
 import butterknife.ButterKnife;
 import timber.log.Timber;
