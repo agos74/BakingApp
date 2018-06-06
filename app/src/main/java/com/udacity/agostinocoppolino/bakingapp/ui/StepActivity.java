@@ -288,6 +288,11 @@ public class StepActivity extends AppCompatActivity implements NavigationFragmen
             navigationFragment.setStepsList(mStepsList);
             navigationFragment.setStepIndex(mCurrentStep);
 
+            //Add the animation
+//            fragmentManager.beginTransaction().setCustomAnimations(R.animator.enter_anim,
+//                    R.animator.exit_anim);
+            //end of animation
+
             // Replace the fragment to its container using a FragmentManager and a Transaction
             fragmentManager.beginTransaction()
                     .replace(R.id.navigation_container, navigationFragment)
