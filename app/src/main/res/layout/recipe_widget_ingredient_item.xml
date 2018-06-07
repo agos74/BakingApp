@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <View
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/bullet" />
-
     <TextView
         android:id="@+id/tv_quantity"
         android:layout_width="wrap_content"

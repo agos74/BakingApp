@@ -41,11 +41,17 @@
                 android:resource="@xml/recipe_widget_provider_info" />
         </receiver>
 
+        <service
+            android:name="com.udacity.agostinocoppolino.bakingapp.widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity android:name=".widget.RecipeWidgetProviderConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>

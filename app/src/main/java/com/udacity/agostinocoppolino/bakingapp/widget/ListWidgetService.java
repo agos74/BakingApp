@@ -24,6 +24,7 @@ public class ListWidgetService extends RemoteViewsService {
             Bundle b = intent.getBundleExtra("BUNDLE");
             recipe = b.getParcelable(Constants.RECIPE_KEY);
         }
+        Timber.d("RemoveViewsFactory: ".concat(recipe.toString()));
         return new ListRemoteViewsFactory(this.getApplicationContext(), recipe);
     }
 }
@@ -35,6 +36,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Recipe mRecipe;
 
     public ListRemoteViewsFactory(Context applicationContext, Recipe recipe) {
+        Timber.d("ListRemoteViewsFactory");
         mContext = applicationContext;
         mRecipe = recipe;
         mIngredientsList = recipe.getIngredients();
@@ -43,6 +45,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
+        Timber.d("onCreate");
 
     }
 
@@ -60,17 +63,21 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
+        Timber.d("getCount");
+
         return (mIngredientsList == null) ? 0 : mIngredientsList.size();
     }
 
     /**
      * This method acts like the onBindViewHolder method in an Adapter
      *
-     * @param position The current position of the item in the GridView to be displayed
-     * @return The RemoteViews object to display for the provided postion
+     * @param position The current position of the item in the ListView to be displayed
+     * @return The RemoteViews object to display for the provided position
      */
     @Override
     public RemoteViews getViewAt(int position) {
+
+        Timber.d("getViewAt: ".concat(String.valueOf(position)));
 
         if (mIngredientsList == null || mIngredientsList.size() == 0) return null;
         final Ingredient ingredient = mIngredientsList.get(position);
@@ -78,7 +85,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         final String ingredientMeasure = ingredient.getMeasure();
         final String ingredientName = ingredient.getIngredient();
 
-        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.recipe_widget_provider);
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.recipe_widget_ingredient_item);
 
         views.setTextViewText(R.id.tv_quantity, ingredientQuantity);
         views.setTextViewText(R.id.tv_measure, ingredientMeasure);
@@ -89,6 +96,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getLoadingView() {
+        Timber.d("getLoadingView");
         return null;
     }
 

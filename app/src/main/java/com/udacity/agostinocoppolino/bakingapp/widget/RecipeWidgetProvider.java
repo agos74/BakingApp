@@ -4,7 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -41,32 +41,39 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
                     recipeList.addAll(response.body());
 
-                    CharSequence recipeId = RecipeWidgetProviderConfigureActivity.loadTitlePref(context, appWidgetId);
+                    CharSequence recipeSelectedPosition = RecipeWidgetProviderConfigureActivity.loadRecipePref(context, appWidgetId);
 
-                    Timber.d("Recipe ID: ".concat(recipeId.toString()));
+                    if (recipeSelectedPosition != null) {
+                        Timber.d("Recipe Selected Position: ".concat(recipeSelectedPosition.toString()));
 
-                    Recipe recipe = recipeList.get(1);
+                        Recipe recipe = recipeList.get(Integer.valueOf(String.valueOf(recipeSelectedPosition)));
 
-                    // Construct the RemoteViews object
-                    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
-                    views.setTextViewText(R.id.recipe_name, recipe.getName());
+                        // Construct the RemoteViews object
+                        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
+                        views.setTextViewText(R.id.recipe_name, recipe.getName());
 
-                    // Set the ListWidgetService intent to act as the adapter for the ListView
-                    Intent intent = new Intent(context, ListWidgetService.class);
-                    Bundle b = new Bundle();
-                    b.putParcelable(Constants.RECIPE_KEY, recipe);
-                    intent.putExtra("BUNDLE", b);
+                        // Set the ListWidgetService intent to act as the adapter for the ListView
+                        Intent serviceIntent = new Intent(context, ListWidgetService.class);
+                        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                        Bundle b = new Bundle();
+                        b.putParcelable(Constants.RECIPE_KEY, recipe);
+                        serviceIntent.putExtra("BUNDLE", b);
 
-                    views.setRemoteAdapter(R.id.ingredients_list_view, intent);
+                        // When intents are compared, the extras are ignored, so we need to embed the extras
+                        // into the data so that the extras will not be ignored.
+                        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-                    // Instruct the widget manager to update the widget
-                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                        views.setRemoteAdapter(R.id.widget_ingredients_list_view, serviceIntent);
+
+                        // Instruct the widget manager to update the widget
+                        appWidgetManager.updateAppWidget(appWidgetId, views);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-
+                Timber.d("Failure Response: ".concat(t.getMessage()));
             }
         });
 
@@ -85,7 +92,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
         for (int appWidgetId : appWidgetIds) {
-            RecipeWidgetProviderConfigureActivity.deleteTitlePref(context, appWidgetId);
+            RecipeWidgetProviderConfigureActivity.deleteRecipePref(context, appWidgetId);
         }
     }
 
@@ -98,7 +105,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
-    // Read the prefix from the SharedPreferences object for this widget.
 
 
 }
