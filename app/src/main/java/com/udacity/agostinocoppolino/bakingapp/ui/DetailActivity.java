@@ -40,6 +40,8 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
+        Timber.d("OnCreate: " + intent.getExtras());
+
         Recipe recipe = intent != null ? (Recipe) intent.getParcelableExtra(Constants.RECIPE_KEY) : null;
 
         if (recipe != null) {

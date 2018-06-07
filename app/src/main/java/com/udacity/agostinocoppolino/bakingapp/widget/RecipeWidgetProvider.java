@@ -1,16 +1,20 @@
 package com.udacity.agostinocoppolino.bakingapp.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.udacity.agostinocoppolino.bakingapp.Constants;
 import com.udacity.agostinocoppolino.bakingapp.R;
 import com.udacity.agostinocoppolino.bakingapp.model.Recipe;
+import com.udacity.agostinocoppolino.bakingapp.ui.DetailActivity;
+import com.udacity.agostinocoppolino.bakingapp.ui.MainActivity;
 
 import java.util.ArrayList;
 
@@ -48,9 +52,29 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
                         Recipe recipe = recipeList.get(Integer.valueOf(String.valueOf(recipeSelectedPosition)));
 
+                        // Set the click handler to open the DetailActivity for recipe,
+                        Timber.d("recipeName=" + recipe.getName());
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(Constants.RECIPE_KEY, recipe);
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                        // When intents are compared, the extras are ignored, so we need to embed the extras
+                        // into the data so that the extras will not be ignored.
+                        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        // Use TaskStackBuilder to build the back stack and get the PendingIntent
+                        PendingIntent pendingIntent = TaskStackBuilder.create(context)
+                                // add all of DetailsActivity's parents to the stack,
+                                // followed by DetailsActivity itself
+                                .addNextIntentWithParentStack(intent)
+                                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
                         // Construct the RemoteViews object
                         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
                         views.setTextViewText(R.id.recipe_name, recipe.getName());
+
+                        // Widgets allow click handlers to only launch pending intents
+                        views.setOnClickPendingIntent(R.id.layout_widget, pendingIntent);
 
                         // Set the ListWidgetService intent to act as the adapter for the ListView
                         Intent serviceIntent = new Intent(context, ListWidgetService.class);

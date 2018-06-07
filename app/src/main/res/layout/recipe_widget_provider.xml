@@ -1,31 +1,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/background_old_paper"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
     <TextView
         android:id="@+id/recipe_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:contentDescription="@string/recipe_name"
-        android:textColor="#ffffff"
+        android:gravity="center"
+        android:padding="@dimen/padding_extra_small"
+        android:text="Loading..."
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 
-    <TextView
-        android:id="@+id/ingredients_title"
-        style="@style/sectionHeader"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ingredients_title"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ingredients_title"
+            style="@style/sectionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredients_title"
+            android:textSize="@dimen/text_sz_medium"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/servings_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_top_servings"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/height_servings_image"
+                android:layout_marginEnd="@dimen/margin_extra_small"
+                android:layout_marginTop="@dimen/margin_top_servings_image"
+                android:background="@drawable/ic_servings_black_24dp" />
+
+            <TextView
+                android:id="@+id/tv_servings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top_servings_text"
+                android:text="@string/recipe_servings_number"
+                android:textSize="@dimen/text_sz_servings"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/widget_ingredients_list_view"
