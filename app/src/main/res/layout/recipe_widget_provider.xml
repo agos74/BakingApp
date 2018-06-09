@@ -7,7 +7,7 @@
     android:padding="@dimen/widget_margin">
 
     <TextView
-        android:id="@+id/recipe_name"
+        android:id="@+id/widget_recipe_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -22,9 +22,11 @@
         android:textStyle="bold|italic" />
 
     <RelativeLayout
+        android:id="@+id/widget_recipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/ingredients_title"
@@ -69,6 +71,15 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_medium"
         android:divider="@color/colorPrimaryDark"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/widget_iv_empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.2"
+        android:background="@drawable/ic_launcher_foreground" />
+
 
 </LinearLayout>

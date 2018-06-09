@@ -76,8 +76,8 @@ public class IngredientsListFragment extends Fragment {
         }
 
         // Set servings
-        String servingText = String.valueOf(mServings);
-        mServingsTextView.setText(servingText);
+        String servingsText = String.valueOf(mServings);
+        mServingsTextView.setText(servingsText);
 
         // Create the adapter
         // This adapter takes in the context and an ArrayList of Ingredients to display

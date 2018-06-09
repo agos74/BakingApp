@@ -1,5 +1,9 @@
 package com.udacity.agostinocoppolino.bakingapp.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -26,4 +30,23 @@ public class NetworkUtils {
         }
         return null;
     }
+
+    /**
+     * This method returns the state of network access.
+     *
+     * @param context The context required for call getSystemService.
+     * @return true if network access is available.
+     */
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork;
+        activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+    }
+
 }

@@ -1,10 +1,12 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,18 +40,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.layout_error)
-    LinearLayout mErrorLayout;
-
     /*
      * The ProgressBar that will indicate to the user that we are loading data. It will be
      * hidden when no data is loading.
      */
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
-
-    @BindView(R.id.retry_button)
-    Button mRetryButton;
 
     private RecipeAdapter mRecipeAdapter;
 
@@ -83,15 +79,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         /* attaches adapter to the RecyclerView in layout. */
         mRecyclerView.setAdapter(mRecipeAdapter);
 
-
-        mRetryButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getSupportLoaderManager().restartLoader(RECIPES_LOADER_ID, null, MainActivity.this);
-            }
-        });
-
-        // Initialize the AsyncTaskLoader
-        getSupportLoaderManager().initLoader(RECIPES_LOADER_ID, null, MainActivity.this);
+        if (NetworkUtils.isConnected(getBaseContext())) {
+            // Initialize the AsyncTaskLoader
+            getSupportLoaderManager().initLoader(RECIPES_LOADER_ID, null, MainActivity.this);
+        } else {
+            showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+        }
 
     }
 
@@ -120,8 +113,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private void showRecipesDataView() {
         // Hide the load indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        /* Make sure the error is invisible */
-        mErrorLayout.setVisibility(View.INVISIBLE);
         // Show mRecyclerView
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -132,14 +123,16 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
+     *
+     * @param errorMessage
      */
-    private void showErrorMessage() {
+    private void showErrorMessage(String errorMessage) {
         // Hide the load indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         /* Hide the currently visible data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Show the error */
-        mErrorLayout.setVisibility(View.VISIBLE);
+        showAlertDialog(errorMessage);
     }
 
 
@@ -156,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
             // Instead of iterating through every recipe, use mRecipeAdapter.setRecipesList and pass in the recipes List
             mRecipeAdapter.setRecipesList(recipesList);
         } else {
-            showErrorMessage();
+            showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
         }
     }
 
@@ -250,6 +243,41 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         int nColumns = width / widthDivider;
 //        if (nColumns < 2) return 2;
         return nColumns;
+    }
+
+    private void showAlertDialog(final String errorMessage) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(
+                MainActivity.this).create();
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.alert_dialog_title));
+
+        // Make a choice mandatory
+        alertDialog.setCancelable(false);
+
+        // Setting Dialog Message
+        alertDialog.setMessage(errorMessage);
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.ic_offline);
+
+        // Setting Retry Button
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.retry_button_title),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // retry reloading
+                        if (NetworkUtils.isConnected(getBaseContext())) {
+                            getSupportLoaderManager().initLoader(RECIPES_LOADER_ID, null, MainActivity.this);
+                        } else {
+                            showErrorMessage(errorMessage);
+                        }
+                        dialog.dismiss();// use dismiss to cancel alert dialog
+                    }
+                });
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 
 }

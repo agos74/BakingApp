@@ -18,13 +18,14 @@
     <string name="ingredients_measure">CUP</string>
     <string name="ingredients_name">Graham Cracker crumbs</string>
 
-    <!-- Error messages -->
-    <string name="error_message">
-        An error has occurred. Please check your internet connection and try again
-    </string>
+    <!-- Error messages-->
+    <string name="network_error_message">Network error. Please check your internet connection and try again.</string>
     <string name="detail_error_message">Recipe data not available</string>
     <string name="step_error_message">Step data not available</string>
-    <string name="retry">Retry</string>
+
+    <!-- Alert Dialog -->
+    <string name="retry_button_title">Retry</string>
+    <string name="alert_dialog_title">Warning!</string>
 
     <!-- Sections Title -->
     <string name="steps_title">Steps</string>

@@ -28,6 +28,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
 
     private static final String PREFS_NAME = "com.udacity.agostinocoppolino.bakingapp.widget.RecipeWidgetProvider";
     private static final String PREF_PREFIX_KEY = "appwidget_";
+    ArrayList<Recipe> mRecipeArrayList;
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     Spinner mSpinnerRecipeSelected;
 
@@ -44,7 +45,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            RecipeWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+            RecipeWidgetProvider.updateAppWidgetFirstConfigure(context, appWidgetManager, mAppWidgetId, mRecipeArrayList);
 
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
@@ -99,13 +100,13 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                 if (response.isSuccessful()) {
 
-                    ArrayList<Recipe> recipeList = new ArrayList<>();
+                    mRecipeArrayList = new ArrayList<>();
 
-                    recipeList.addAll(response.body());
+                    mRecipeArrayList.addAll(response.body());
 
                     ArrayList<String> recipeNames = new ArrayList<>();
                     //get array with name of recipes
-                    for (Recipe recipe : recipeList) {
+                    for (Recipe recipe : mRecipeArrayList) {
                         recipeNames.add(recipe.getName());
                     }
 
@@ -133,9 +134,6 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
                         finish();
                         return;
                     }
-
-
-                    //                   mAppWidgetText.setText(loadTitlePref(RecipeWidgetProviderConfigureActivity.this, mAppWidgetId));
 
 
                 }

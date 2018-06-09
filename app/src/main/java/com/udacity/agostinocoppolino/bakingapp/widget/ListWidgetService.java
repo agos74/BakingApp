@@ -23,8 +23,8 @@ public class ListWidgetService extends RemoteViewsService {
         if (intent.hasExtra("BUNDLE")) {
             Bundle b = intent.getBundleExtra("BUNDLE");
             recipe = b.getParcelable(Constants.RECIPE_KEY);
+            Timber.d("RemoveViewsFactory: ".concat(recipe.toString()));
         }
-        Timber.d("RemoveViewsFactory: ".concat(recipe.toString()));
         return new ListRemoteViewsFactory(this.getApplicationContext(), recipe);
     }
 }
@@ -33,27 +33,22 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     Context mContext;
     private List<Ingredient> mIngredientsList;
-    private Recipe mRecipe;
 
-    public ListRemoteViewsFactory(Context applicationContext, Recipe recipe) {
+    ListRemoteViewsFactory(Context applicationContext, Recipe recipe) {
         Timber.d("ListRemoteViewsFactory");
         mContext = applicationContext;
-        mRecipe = recipe;
         mIngredientsList = recipe.getIngredients();
         Timber.d(mIngredientsList.toString());
     }
 
     @Override
     public void onCreate() {
-        Timber.d("onCreate");
 
     }
 
     //called on start and when notifyAppWidgetViewDataChanged is called
     @Override
     public void onDataSetChanged() {
-        Timber.d("onDataSetChanged");
-
     }
 
     @Override
@@ -64,7 +59,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public int getCount() {
         Timber.d("getCount");
-
         return (mIngredientsList == null) ? 0 : mIngredientsList.size();
     }
 
@@ -96,7 +90,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getLoadingView() {
-        Timber.d("getLoadingView");
         return null;
     }
 
