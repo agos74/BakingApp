@@ -11,7 +11,7 @@ public class ImageUtils {
 
     public static Uri getImage(Recipe recipe, Context context) {
         Uri imageUri;
-        Timber.d("Recipe image: " + recipe.getImage());
+        Timber.d("Recipe image: ".concat(recipe.getImage()));
         if (!recipe.getImage().equals("")) { //image available
             imageUri = Uri.parse(recipe.getImage()).buildUpon()
                     .build();
@@ -36,7 +36,7 @@ public class ImageUtils {
             imageUri = Uri.parse(String.valueOf(recipeImageId)).buildUpon()
                     .build();
         }
-        Timber.d("imageUri: " + imageUri);
+        Timber.d("imageUri: ".concat(String.valueOf(imageUri)));
         return imageUri;
 
     }

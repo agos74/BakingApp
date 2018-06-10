@@ -1,6 +1,7 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,8 +58,9 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
      *
      * @return A new StepAdapterViewHolder that holds the View for each list item
      */
+    @NonNull
     @Override
-    public StepAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StepAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutIdForListItem = R.layout.step_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(layoutIdForListItem, parent, false);
@@ -72,10 +74,11 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
      * passed into us.
      */
     @Override
-    public void onBindViewHolder(StepAdapter.StepAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull StepAdapter.StepAdapterViewHolder holder, final int position) {
         Step stepForThisPosition = mStepsList.get(position);
 
-        holder.mStepShortDescriptionTextView.setText((position) + " - " + stepForThisPosition.getShortDescription());
+        String stepText = holder.mStepShortDescriptionTextView.getResources().getString(R.string.step_description_with_placeholder, String.valueOf(position), stepForThisPosition.getShortDescription());
+        holder.mStepShortDescriptionTextView.setText(stepText);
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_TOP:
@@ -95,7 +98,7 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         if (isTablet) {
             if (mStepSelected == position) {
                 holder.mStepSelectedCardView.setVisibility(View.VISIBLE);
-                holder.mItemCircle.setBackground(holder.mItemCircle.getResources().getDrawable(R.drawable.ic_circle_black_full_24dp));
+                holder.mItemCircle.setBackground(holder.mItemCircle.getResources().getDrawable(R.drawable.ic_circle_black_full));
             } else {
                 holder.mStepSelectedCardView.setVisibility(View.INVISIBLE);
                 holder.mItemCircle.setBackground(holder.mItemCircle.getResources().getDrawable(R.drawable.ic_circle_black_24dp));
@@ -132,9 +135,9 @@ class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder
         @BindView(R.id.item_circle)
         View mItemCircle;
 
-        private ViewGroup mListView;
+        private final ViewGroup mListView;
 
-        public StepAdapterViewHolder(View itemView, ViewGroup listView) {
+        StepAdapterViewHolder(View itemView, ViewGroup listView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);

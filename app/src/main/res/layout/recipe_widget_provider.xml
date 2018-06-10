@@ -1,22 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_old_paper"
     android:orientation="vertical"
-    android:padding="@dimen/widget_margin">
+    android:padding="@dimen/widget_margin"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/widget_recipe_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:background="@color/colorPrimaryDark"
         android:contentDescription="@string/recipe_name"
         android:gravity="center"
         android:padding="@dimen/padding_extra_small"
-        android:text="Loading..."
+        android:text="@string/widget_loading"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold|italic" />
@@ -44,14 +44,16 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_top_servings"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="RelativeOverlap,UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_servings_image"
                 android:layout_marginEnd="@dimen/margin_extra_small"
                 android:layout_marginTop="@dimen/margin_top_servings_image"
-                android:background="@drawable/ic_servings_black_24dp" />
+                android:background="@drawable/ic_servings_black_24dp"
+                android:contentDescription="@string/servings_image_content_description" />
 
             <TextView
                 android:id="@+id/tv_servings"
@@ -79,7 +81,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.2"
-        android:background="@drawable/ic_launcher_foreground" />
+        android:background="@drawable/ic_launcher_foreground"
+        android:contentDescription="@string/app_default_image_content_description" />
 
 
 </LinearLayout>

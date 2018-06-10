@@ -3,6 +3,7 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -13,8 +14,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.lang.reflect.Type;
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private static final int RECIPES_LOADER_ID = 0;
 
     //ButterKnife Binding
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
 
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
      * The ProgressBar that will indicate to the user that we are loading data. It will be
      * hidden when no data is loading.
      */
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
      *
-     * @param errorMessage
+     * @param errorMessage Error message to display in alert
      */
     private void showErrorMessage(String errorMessage) {
         // Hide the load indicator
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     }
 
 
+    @NonNull
     @Override
     public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
         showLoading();
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> recipesList) {
+    public void onLoadFinished(@NonNull Loader<List<Recipe>> loader, List<Recipe> recipesList) {
         if (recipesList != null) {
             showRecipesDataView();
             // Instead of iterating through every recipe, use mRecipeAdapter.setRecipesList and pass in the recipes List
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Recipe>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Recipe>> loader) {
 
     }
 
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
         List<Recipe> mRecipesList = null;
 
-        public MyAsyncTaskLoader(Context context) {
+        MyAsyncTaskLoader(Context context) {
             super(context);
         }
 
@@ -240,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         int widthDivider = 400;
 //        int widthDivider = 300;
         int width = displayMetrics.widthPixels;
+        //noinspection UnnecessaryLocalVariable
         int nColumns = width / widthDivider;
 //        if (nColumns < 2) return 2;
         return nColumns;

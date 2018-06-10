@@ -3,6 +3,7 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,12 +26,15 @@ import timber.log.Timber;
 
 public class NavigationFragment extends Fragment {
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.imageButton_prev)
     ImageButton mPrevImageButton;
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.imageButton_next)
     ImageButton mNextImageButton;
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tv_navigation)
     TextView mNavigationTextView;
 
@@ -54,7 +58,7 @@ public class NavigationFragment extends Fragment {
     public NavigationFragment() {
     }
 
-    OnStepSelectedListener mCallback;
+    private OnStepSelectedListener mCallback;
 
     // Container Activity must implement this interface
     public interface OnStepSelectedListener {
@@ -77,7 +81,7 @@ public class NavigationFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Timber.d("On Create View");
         boolean firstTime = false;
@@ -88,7 +92,9 @@ public class NavigationFragment extends Fragment {
             mStepsList = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mCurrentStep = savedInstanceState.getInt(CURRENT_STEP);
 
-            firstTime = getArguments().getBoolean(Constants.FIRST_TIME_KEY, false);
+            if (getArguments() != null) {
+                firstTime = getArguments().getBoolean(Constants.FIRST_TIME_KEY, false);
+            }
         }
 
         // Inflate the Navigation fragment layout
@@ -147,7 +153,7 @@ public class NavigationFragment extends Fragment {
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
         currentState.putInt(CURRENT_STEP, mCurrentStep);
     }

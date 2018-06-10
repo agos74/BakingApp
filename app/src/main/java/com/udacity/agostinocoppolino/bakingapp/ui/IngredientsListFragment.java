@@ -1,5 +1,6 @@
 package com.udacity.agostinocoppolino.bakingapp.ui;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,11 +21,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@SuppressWarnings("WeakerAccess")
 public class IngredientsListFragment extends Fragment {
 
     private static final String INGREDIENTS_LIST_TEXT_KEY = "ingredients_list";
     private static final String INGREDIENTS_LIST_EXPANDED_TEXT_KEY = "ingredients_list_expanded";
-    private String RECIPE_SERVINGS_TEXT_KEY = "recipe_servings";
+    private final String RECIPE_SERVINGS_TEXT_KEY = "recipe_servings";
 
     private List<Ingredient> mIngredientsList;
     private int mServings;
@@ -50,7 +52,7 @@ public class IngredientsListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 
         final View view = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
@@ -81,6 +83,7 @@ public class IngredientsListFragment extends Fragment {
 
         // Create the adapter
         // This adapter takes in the context and an ArrayList of Ingredients to display
+        //noinspection ConstantConditions
         IngredientAdapter mAdapter = new IngredientAdapter(getContext(), mIngredientsList);
 
         // Set the adapter on the ListView
@@ -129,7 +132,7 @@ public class IngredientsListFragment extends Fragment {
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putParcelableArrayList(INGREDIENTS_LIST_TEXT_KEY, (ArrayList<? extends Parcelable>) mIngredientsList);
         currentState.putInt(RECIPE_SERVINGS_TEXT_KEY, mServings);
         //Put the ingredients list expanded state in the currentState bundle

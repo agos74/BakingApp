@@ -6,8 +6,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -53,7 +53,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Call<ArrayList<Recipe>> call = gitHubService.getRecipes();
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
-            public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Recipe>> call, @NonNull Response<ArrayList<Recipe>> response) {
                 if (response.isSuccessful()) {
                     Timber.d("Successful Response!");
                     mRecipeArrayList.addAll(response.body());
@@ -67,7 +67,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Recipe>> call, @NonNull Throwable t) {
                 Timber.d("Failure Response: ".concat(t.getMessage()));
             }
         });

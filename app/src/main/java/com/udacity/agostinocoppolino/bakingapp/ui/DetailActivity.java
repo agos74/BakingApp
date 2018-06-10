@@ -17,10 +17,6 @@ import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
 
-    // Track whether to display a two-pane or single-pane UI
-    // A single-pane display refers to phone screens, and two-pane to larger tablet screens
-    private boolean mTwoPane;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +35,6 @@ public class DetailActivity extends AppCompatActivity {
         if (intent == null) {
             closeOnError();
         }
-
-        Timber.d("OnCreate: " + intent.getExtras());
 
         Recipe recipe = intent != null ? (Recipe) intent.getParcelableExtra(Constants.RECIPE_KEY) : null;
 
@@ -76,9 +70,8 @@ public class DetailActivity extends AppCompatActivity {
 
                 // Determine if you're creating a two-pane or single-pane display
                 if (findViewById(R.id.step_container) != null) {
-                    // This FrameLayout will only initially exist in the two-pane tablet case
-                    mTwoPane = true;
 
+                    // This FrameLayout will only initially exist in the two-pane tablet case
                     Timber.d("Two Pane");
 
                     // Create a new stepFragment
@@ -95,7 +88,7 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
 
                     // We're in single-pane mode and displaying fragments on a phone in separate activities
-                    mTwoPane = false;
+                    Timber.d("Single Pane");
 
                 }
             }

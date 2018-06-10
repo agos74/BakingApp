@@ -15,6 +15,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+@SuppressWarnings("ALL")
 public class ListWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -31,8 +32,8 @@ public class ListWidgetService extends RemoteViewsService {
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    Context mContext;
-    private List<Ingredient> mIngredientsList;
+    private final Context mContext;
+    private final List<Ingredient> mIngredientsList;
 
     ListRemoteViewsFactory(Context applicationContext, Recipe recipe) {
         Timber.d("ListRemoteViewsFactory");

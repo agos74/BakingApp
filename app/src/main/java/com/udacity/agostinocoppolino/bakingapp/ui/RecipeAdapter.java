@@ -3,6 +3,7 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +54,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
      *
      * @return A new RecipeAdapterViewHolder that holds the View for each list item
      */
+    @NonNull
     @Override
-    public RecipeAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.recipe_grid_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -70,7 +72,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
      * passed into us.
      */
     @Override
-    public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecipeAdapterViewHolder holder, int position) {
         Recipe recipeForThisPosition = mRecipesList.get(position);
 
         Uri imgUri = ImageUtils.getImage(recipeForThisPosition, holder.mRecipeImageView.getContext());
@@ -111,7 +113,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         @BindView(R.id.tv_recipe_servings)
         TextView mRecipeServingsTextView;
 
-        public RecipeAdapterViewHolder(View itemView) {
+        RecipeAdapterViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);

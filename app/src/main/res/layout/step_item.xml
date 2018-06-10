@@ -18,7 +18,7 @@
         android:background="@drawable/ic_circle_bg_full_24dp"
         android:padding="4dp"
         android:scaleType="centerCrop"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
 
@@ -27,7 +27,10 @@
         android:id="@+id/item_line"
         android:layout_width="19dp"
         android:layout_height="match_parent"
-        android:padding="2dp">
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp"
+        android:paddingTop="4dp">
 
         <!-- the semi transparent circle on the line -->
         <View
@@ -46,10 +49,12 @@
         android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
         android:paddingBottom="24dp"
+        android:paddingEnd="24dp"
         android:paddingStart="24dp">
 
         <TextView
             android:id="@+id/tv_short_description"
+            android:paddingTop="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"

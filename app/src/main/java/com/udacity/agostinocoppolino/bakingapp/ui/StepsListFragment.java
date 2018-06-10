@@ -3,6 +3,7 @@ package com.udacity.agostinocoppolino.bakingapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
 
 // This fragment displays all of the steps in one list
 
+@SuppressWarnings({"WeakerAccess", "ConstantConditions"})
 public class StepsListFragment extends Fragment implements StepAdapter.StepAdapterOnClickHandler {
 
     private static final String STEPS_LIST_KEY = "steps_list";
@@ -49,7 +51,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Load the saved state (the list of steps) if there is one
         if (savedInstanceState != null) {
@@ -93,7 +95,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putParcelableArrayList(STEPS_LIST_KEY, (ArrayList<? extends Parcelable>) mStepsList);
         currentState.putString(RECIPE_NAME_KEY, mRecipeName);
         currentState.putInt(CURRENT_STEP_KEY, mCurrentStep);
@@ -106,7 +108,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
      *
      * @param stepIndex The index of the step that was clicked
      * @param v         The current selected View
-     * @param listView
+     * @param listView  The list view to reset selected step
      */
 
     public void onClick(int stepIndex, View v, ViewGroup listView) {
@@ -134,7 +136,7 @@ public class StepsListFragment extends Fragment implements StepAdapter.StepAdapt
             }
             mCurrentSelectedView = v;
             mCurrentSelectedView.findViewById(R.id.iv_step_selected).setVisibility(View.VISIBLE);
-            mCurrentSelectedView.findViewById(R.id.item_circle).setBackground(getResources().getDrawable(R.drawable.ic_circle_black_full_24dp));
+            mCurrentSelectedView.findViewById(R.id.item_circle).setBackground(getResources().getDrawable(R.drawable.ic_circle_black_full));
 
 
             // Replace the fragment with the new step selected

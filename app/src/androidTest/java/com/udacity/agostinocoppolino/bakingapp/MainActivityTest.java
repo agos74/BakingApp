@@ -1,7 +1,6 @@
 package com.udacity.agostinocoppolino.bakingapp;
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -41,14 +40,13 @@ public class MainActivityTest {
         Espresso.onView(withId(R.id.recyclerview_main)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
 
         // Checks that the DetailActivity opens with the correct recipe name displayed on the toolbar
-        CharSequence title = RECIPE_NAME;
-        matchToolbarTitle(title);
+        matchToolbarTitle();
 
     }
 
-    private static ViewInteraction matchToolbarTitle(CharSequence title) {
-        return onView(isAssignableFrom(Toolbar.class))
-                .check(matches(withToolbarTitle(is(title))));
+    private static void matchToolbarTitle() {
+        onView(isAssignableFrom(Toolbar.class))
+                .check(matches(withToolbarTitle(is((CharSequence) MainActivityTest.RECIPE_NAME))));
     }
 
     private static Matcher<? super View> withToolbarTitle(final Matcher<CharSequence> charSequenceMatcher) {

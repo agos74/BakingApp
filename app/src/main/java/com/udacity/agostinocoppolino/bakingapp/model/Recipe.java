@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class Recipe implements Parcelable {
 
     private String id;
@@ -14,7 +15,7 @@ public class Recipe implements Parcelable {
     private int servings;
     private String image;
 
-    protected Recipe(Parcel in) {
+    private Recipe(Parcel in) {
         id = in.readString();
         name = in.readString();
         servings = in.readInt();
@@ -40,6 +41,7 @@ public class Recipe implements Parcelable {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public void setId(String id) {
         this.id = id;
     }
@@ -48,6 +50,7 @@ public class Recipe implements Parcelable {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
@@ -56,6 +59,7 @@ public class Recipe implements Parcelable {
         return ingredients;
     }
 
+    @SuppressWarnings("unused")
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
@@ -64,6 +68,7 @@ public class Recipe implements Parcelable {
         return steps;
     }
 
+    @SuppressWarnings("unused")
     public void setSteps(List<Step> steps) {
         this.steps = steps;
     }
@@ -72,6 +77,7 @@ public class Recipe implements Parcelable {
         return servings;
     }
 
+    @SuppressWarnings("unused")
     public void setServings(int servings) {
         this.servings = servings;
     }
@@ -80,6 +86,7 @@ public class Recipe implements Parcelable {
         return image;
     }
 
+    @SuppressWarnings("unused")
     public void setImage(String image) {
         this.image = image;
     }

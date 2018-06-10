@@ -3,13 +3,14 @@ package com.udacity.agostinocoppolino.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@SuppressWarnings("unused")
 public class Ingredient implements Parcelable {
 
     private String quantity;
     private String measure;
     private String ingredient;
 
-    protected Ingredient(Parcel in) {
+    Ingredient(Parcel in) {
         quantity = in.readString();
         measure = in.readString();
         ingredient = in.readString();

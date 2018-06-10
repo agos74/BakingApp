@@ -1,22 +1,26 @@
 <resources>
     <string name="app_name">Baking App</string>
+
     <!-- Images content description -->
     <string name="recipe_image_content_description">Recipe image</string>
     <string name="expand_more_image_content_description">Expand more ingredients list image</string>
     <string name="expand_less_image_content_description">Expand less ingredients list image</string>
+    <string name="app_default_image_content_description">Baking App default image</string>
+    <string name="servings_image_content_description">Servings image</string>
+    <string name="next_step_image_content_description">Next step image</string>
+    <string name="previous_step_image_content_description">Previous step image</string>
 
     <!-- Sample text -->
     <string name="recipe_name">Nutella Pie</string>
     <string name="recipe_servings">Serving for 8 people</string>
     <string name="recipe_servings_number">8</string>
     <string name="recipe_step_description">Recipe Step Description</string>
-    <string name="ingredients">2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n2 CUP Graham Cracker crumbs\n6 TBLSP unsalted butter, melted\n0.5 CUP granulated sugargranulated sugar\n1.5 TSP salt\n
-    </string>
     <string name="step_description">2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.
     </string>
     <string name="ingredients_quantity">2</string>
     <string name="ingredients_measure">CUP</string>
     <string name="ingredients_name">Graham Cracker crumbs</string>
+    <string name="steps_navigation">10 of 12</string>
 
     <!-- Error messages-->
     <string name="network_error_message">Network error. Please check your internet connection and try again.</string>
@@ -31,20 +35,15 @@
     <string name="steps_title">Steps</string>
     <string name="ingredients_title">Ingredients</string>
 
-
+    <!-- Placeholders -->
     <string name="servings_text_with_placeholder">Serving for %1$s people</string>
     <string name="steps_count_with_placeholder">%1$s of %2$s</string>
-
+    <string name="step_description_with_placeholder">%1$s - %2$s</string>
 
     <!-- Widget -->
-    <string name="widget_id">App Widget ID\u0020</string>
-    <string name="URL">Tap to launch URL</string>
-    <string name="update">Tap to update</string>
-    <string name="last_update">Last Update</string>
-    <string name="time">%1$s</string>
     <string name="select_a_recipe">Select a recipe</string>
     <string name="add_widget">Add widget</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
+    <string name="widget_loading">Loading…</string>
+
 
 </resources>

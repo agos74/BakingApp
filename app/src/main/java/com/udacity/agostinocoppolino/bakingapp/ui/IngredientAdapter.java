@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
-public class IngredientAdapter extends ArrayAdapter<Ingredient> {
+class IngredientAdapter extends ArrayAdapter<Ingredient> {
 
     private final Context mContext;
     private final List<Ingredient> ingredientsList;
@@ -68,7 +68,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         @BindView(R.id.tv_ingredient)
         TextView mIngredientTextView;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }

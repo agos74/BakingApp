@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
+@SuppressWarnings({"WeakerAccess", "ConstantConditions"})
 public class StepFragment extends Fragment {
 
     private static final String KEY_STEPS_LIST = "steps_list";
@@ -92,7 +94,7 @@ public class StepFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Inflate the StepFragment layout
         View view = inflater.inflate(R.layout.fragment_step, container, false);
@@ -151,7 +153,7 @@ public class StepFragment extends Fragment {
 
     private void populateStep() {
 
-        Timber.d("PopulateStep: " + mStartPosition);
+        Timber.d("PopulateStep: ".concat(String.valueOf(mStartPosition)));
         Step step = mStepsList.get(mCurrentStep);
 
         mShortDescriptionTextView.setText(step.getShortDescription());
@@ -190,18 +192,14 @@ public class StepFragment extends Fragment {
 
     private boolean isLandscapePhone() {
         // Checks the screen orientation and if we are in phone (fragment is in StepActivity)
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && this.getActivity().getClass().getSimpleName().equals("StepActivity")) {
-            return true;
-        } else {
-            return false;
-        }
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && this.getActivity().getClass().getSimpleName().equals("StepActivity");
     }
 
     /**
      * Save the current state of this fragment
      */
     @Override
-    public void onSaveInstanceState(Bundle currentState) {
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
         currentState.putParcelableArrayList(KEY_STEPS_LIST, (ArrayList<? extends Parcelable>) mStepsList);
         currentState.putInt(KEY_CURRENT_STEP, mCurrentStep);
         if (mExoPlayer != null) {

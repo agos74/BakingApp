@@ -9,7 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
-public interface RecipesAPIService {
+interface RecipesAPIService {
 
     String ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/";
 

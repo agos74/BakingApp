@@ -3,6 +3,7 @@ package com.udacity.agostinocoppolino.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@SuppressWarnings("ALL")
 public class Step implements Parcelable {
 
     private String id;
@@ -11,7 +12,7 @@ public class Step implements Parcelable {
     private String videoURL;
     private String thumbnailURL;
 
-    protected Step(Parcel in) {
+    Step(Parcel in) {
         id = in.readString();
         shortDescription = in.readString();
         description = in.readString();

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -24,15 +25,16 @@ import timber.log.Timber;
 /**
  * The configuration screen for the {@link RecipeWidgetProvider RecipeWidgetProvider} AppWidget.
  */
+@SuppressWarnings("unchecked")
 public class RecipeWidgetProviderConfigureActivity extends Activity {
 
     private static final String PREFS_NAME = "com.udacity.agostinocoppolino.bakingapp.widget.RecipeWidgetProvider";
     private static final String PREF_PREFIX_KEY = "appwidget_";
-    ArrayList<Recipe> mRecipeArrayList;
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    Spinner mSpinnerRecipeSelected;
+    private ArrayList<Recipe> mRecipeArrayList;
+    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private Spinner mSpinnerRecipeSelected;
 
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = RecipeWidgetProviderConfigureActivity.this;
 
@@ -60,7 +62,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveRecipePref(Context context, int appWidgetId, String text) {
+    private static void saveRecipePref(Context context, int appWidgetId, String text) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
         prefs.apply();
@@ -70,8 +72,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
     // If there is no preference saved, get the default from a resource
     static String loadRecipePref(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String value = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-        return value;
+        return prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
     }
 
     static void deleteRecipePref(Context context, int appWidgetId) {
@@ -97,7 +98,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
         call.enqueue(new Callback<ArrayList<Recipe>>() {
 
             @Override
-            public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Recipe>> call, @NonNull Response<ArrayList<Recipe>> response) {
                 if (response.isSuccessful()) {
 
                     mRecipeArrayList = new ArrayList<>();
@@ -132,7 +133,6 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
                     // If this activity was started with an intent without an app widget ID, finish with an error.
                     if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
                         finish();
-                        return;
                     }
 
 
@@ -140,7 +140,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Recipe>> call, @NonNull Throwable t) {
                 Timber.d("Failure Response: ".concat(t.getMessage()));
 
             }
