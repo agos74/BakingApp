@@ -18,7 +18,7 @@
         android:background="@drawable/ic_circle_bg_full_24dp"
         android:padding="4dp"
         android:scaleType="centerCrop"
-        android:visibility="visible"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
 
