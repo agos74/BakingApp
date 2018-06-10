@@ -1,2 +1,2 @@
-Baking App
-Project for Android Nanodegree Developer Udacity Schoolarship
+# Baking App
+Second project for Android Nanodegree Developer Udacity Schoolarship.
